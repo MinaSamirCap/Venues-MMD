@@ -1,6 +1,8 @@
 package com.example.andoird.venues_mmd.api;
 
-import retrofit2.Call;
+import com.example.andoird.venues_mmd.api.models.BaseModel;
+
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -11,8 +13,8 @@ import retrofit2.http.Query;
 public interface RestApi {
 
     @GET("/v2/venues/search?")
-    Call<String> getPosts(@Query("near") String near,
-                          @Query("client_id") String clientId,
-                          @Query("client_secret") String clientSecret,
-                          @Query("v") String date);
+    Observable<BaseModel> getPosts(@Query("near") String near,
+                                   @Query("client_id") String clientId,
+                                   @Query("client_secret") String clientSecret,
+                                   @Query("v") String date);
 }
