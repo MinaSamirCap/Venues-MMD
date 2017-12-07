@@ -1,12 +1,11 @@
 package com.example.andoird.venues_mmd.viewmodels;
 
 import android.app.Activity;
-import android.databinding.BaseObservable;
 import android.databinding.ObservableField;
 
 import com.example.andoird.venues_mmd.App;
 import com.example.andoird.venues_mmd.api.calls.RestApi;
-import com.example.andoird.venues_mmd.api.models.BaseModel;
+import com.example.andoird.venues_mmd.api.models.SearchVenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 
 import javax.inject.Inject;
@@ -20,7 +19,7 @@ import retrofit2.Retrofit;
  * Created by mina on 07/12/17.
  */
 
-public class MainActivityViewModel extends BaseObservable {
+public class MainActivityViewModel extends BaseViewModel<SearchVenueModel> {
 
     @Inject
     Retrofit retrofit;
@@ -28,14 +27,14 @@ public class MainActivityViewModel extends BaseObservable {
     public ObservableField<String> text = new ObservableField<>();
 
     public MainActivityViewModel(Activity activity) {
-
+        super(activity, new SearchVenueModel());
         ((App) activity.getApplication()).getNetComponent().inject(this);
 
         loadData();
     }
 
     private void loadData() {
-        Observable<BaseModel> posts = retrofit.create(RestApi.class).getPosts("new cairo",
+        Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPosts("new cairo",
                 ApiUtils.CLIENT_ID,ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         getObservable(posts).subscribe(this::handleReposResponse, this::handleError);
@@ -47,8 +46,9 @@ public class MainActivityViewModel extends BaseObservable {
     }
 
     private void handleReposResponse(Object o) {
-        BaseModel baseModel = (BaseModel) o;
-        text.set(baseModel.getMeta().getRequestId());
+        SearchVenueModel baseModel = (SearchVenueModel) o;
+        text.set(baseModel.getMeta().getRequestId()+ "\t" + baseModel.getResponse().isConfident() + "\n" +
+        baseModel.getResponse().getVenuesList().get(0).getContact().getPhone());
     }
 
 
@@ -56,7 +56,7 @@ public class MainActivityViewModel extends BaseObservable {
         text.set(throwable.toString());
     }
 
-    private void handleReposResponse(BaseModel baseModel) {
+    private void handleReposResponse(SearchVenueModel baseModel) {
         text.set(baseModel.getMeta().getRequestId());
     }
 
