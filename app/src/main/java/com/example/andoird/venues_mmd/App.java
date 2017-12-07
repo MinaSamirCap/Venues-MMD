@@ -2,6 +2,7 @@ package com.example.andoird.venues_mmd;
 
 import android.app.Application;
 
+import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.dagger.component.DaggerNetComponent;
 import com.example.andoird.venues_mmd.dagger.component.NetComponent;
 import com.example.andoird.venues_mmd.dagger.module.AppModule;
@@ -21,7 +22,7 @@ public class App extends Application {
 
         mNetComponent = DaggerNetComponent.builder()
                 .appModule(new AppModule(this))
-                .netModule(new NetModule("https://api.foursquare.com"))
+                .netModule(new NetModule(ApiUtils.BASE_URL))
                 .build();
     }
 
