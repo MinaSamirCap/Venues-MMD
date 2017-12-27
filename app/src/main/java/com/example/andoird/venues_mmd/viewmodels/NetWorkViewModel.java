@@ -11,6 +11,7 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -35,10 +36,11 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
 
     protected <D> void makeNetworkRequest(final Observable<D> observable, final Consumer<D> onNext,
                                           final Consumer<Throwable> onError, final ProgressController progressController) {
-        /*if (progressController != null)
+        if (progressController != null)
             progressController.setProgress();
 
-        Subscription subscription = observable.subscribeOn(Schedulers.io())
+        /*Disposable subscription =*/
+        observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<D>() {
                     @Override
@@ -48,9 +50,7 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
                             progressController.removeProgress();
 
                         try {
-
-
-                                setModel((T) d);
+                            setModel((T) d);
 
                             if (onNext != null)
                                 onNext.accept(d);
@@ -58,7 +58,7 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (onError != null) {
-                                onError.accept(e);
+                                //onError.accept(e);
                             } else {
                                 //ErrorHandler.handelError(context, e);
                             }
@@ -80,14 +80,15 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
                     }
                 });
 
-        String tag = ServiceManager.getInstance().removeTag(observable);
+        /*String tag = ServiceManager.getInstance().removeTag(observable);
         unSubscribe(subscriptions.remove(tag));
-        subscriptions.put(tag, subscription);*/
+        subscriptions.put(tag, subscription);
+        subscription.dispose();*/
     }
 
-    private void unSubscribe(Subscription subscription) {
-        /*if (subscription != null && !subscription.isUnsubscribed())
-            subscription.unsubscribe();*/
+    /*private void unSubscribe(Subscription subscription) {
+        *//*if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();*//*
     }
 
     public void destroy() {
@@ -95,7 +96,7 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
             unSubscribe(iterator.next().getValue());
             iterator.remove();
         }
-    }
+    }*/
 
     protected interface ProgressController {
         void setProgress();
