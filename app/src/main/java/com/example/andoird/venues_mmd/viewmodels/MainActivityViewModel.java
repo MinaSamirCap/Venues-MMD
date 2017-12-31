@@ -3,6 +3,8 @@ package com.example.andoird.venues_mmd.viewmodels;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -11,6 +13,7 @@ import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.api.calls.RestApi;
 import com.example.andoird.venues_mmd.api.models.SearchVenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
+import com.example.andoird.venues_mmd.ui.adapters.VenueItemAdapter;
 import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
@@ -38,20 +41,25 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     private AppCompatActivity activity;
     private SearchHistoryTable recentSearchDatabase;
 
-    public MainActivityViewModel(AppCompatActivity activity, SearchView searchView, Toolbar toolbar) {
+    private RecyclerView recyclerView;
+
+    public MainActivityViewModel(AppCompatActivity activity, SearchView searchView,
+                                 Toolbar toolbar, RecyclerView recyclerView) {
 
         super(activity, new SearchVenueModel());
         ((App) activity.getApplication()).getNetComponent().inject(this);
         this.activity = activity;
         this.searchView = searchView;
         this.toolbar = toolbar;
+        this.recyclerView = recyclerView;
         activity.setSupportActionBar(toolbar);
         setupSearchView();
-        loadData();
+        progressVisibility.set(View.GONE);
+        //loadData();
     }
 
-    private void loadData() {
-        Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPosts("new cairo",
+    private void loadData(String queryPlace) {
+        Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPosts(queryPlace,
                 ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
@@ -69,7 +77,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
 
     @Override
     protected void setModel(SearchVenueModel model) {
-        text.set(model.getMeta().getRequestId() + "\n" + model.getResponse().isConfident() + "\n" +
+        /*text.set(model.getMeta().getRequestId() + "\n" + model.getResponse().isConfident() + "\n" +
                 model.getResponse().getVenuesList().get(0).getContact().getPhone() + "\n" +
                 model.getResponse().getVenuesList().get(0).getLocation().getAddress() + "\n" +
                 model.getResponse().getVenuesList().get(0).getLocation().getState() + "\n" +
@@ -81,6 +89,10 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
                 model.getResponse().getVenuesList().get(0).getStats().getUsersCount() + "\n" +
                 model.getResponse().getVenuesList().get(0).isHasPerk() + "\n" +
                 model.getResponse().getVenuesList().get(0).isVerified());
+*/
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(new VenueItemAdapter(activity, model.getResponse().getVenuesList()));
     }
 
     private void setupSearchView() {
@@ -93,6 +105,8 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
             public boolean onQueryTextSubmit(String query) {
                 recentSearchDatabase.addItem(new SearchItem(query));
                 searchView.close(true);
+                loadData(query);
+                //dispose();
                 return true;
             }
 
@@ -107,6 +121,8 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
             @Override
             public void onSearchItemClick(View view, int position, String text) {
                 searchView.close(false);
+                loadData(text);
+                //dispose();
             }
         });
         searchView.setAdapter(searchAdapter);

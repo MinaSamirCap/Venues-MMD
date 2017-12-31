@@ -11,6 +11,7 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -19,11 +20,13 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
 
     private Map<String, Subscription> subscriptions;
+    private CompositeDisposable mCompositeDisposable;
 
     protected NetWorkViewModel(Context context, T model) {
         super(context, model);
 
         subscriptions = new HashMap<>();
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     protected void makeNetworkRequest(final Observable observable, final ProgressController progressController) {
@@ -39,8 +42,7 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
         if (progressController != null)
             progressController.setProgress();
 
-        /*Disposable subscription =*/
-        observable.subscribeOn(Schedulers.io())
+        mCompositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<D>() {
                     @Override
@@ -78,7 +80,7 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
                             //ErrorHandler.handelError(context, throwable);
                         }
                     }
-                });
+                }));
 
         /*String tag = ServiceManager.getInstance().removeTag(observable);
         unSubscribe(subscriptions.remove(tag));
@@ -86,11 +88,12 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
         subscription.dispose();*/
     }
 
-    /*private void unSubscribe(Subscription subscription) {
-        *//*if (subscription != null && !subscription.isUnsubscribed())
-            subscription.unsubscribe();*//*
+    public void dispose() {
+        if (mCompositeDisposable != null )/*&& !subscription.isUnsubscribed())*/
+            mCompositeDisposable.dispose();
     }
 
+    /*
     public void destroy() {
         for (Iterator<Map.Entry<String, Subscription>> iterator = subscriptions.entrySet().iterator(); iterator.hasNext(); ) {
             unSubscribe(iterator.next().getValue());

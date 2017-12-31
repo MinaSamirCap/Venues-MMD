@@ -19,7 +19,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mainActivityViewModel = new MainActivityViewModel(this, binding.searchView, binding.toolbar);
+        mainActivityViewModel = new MainActivityViewModel(this, binding.searchView,
+                binding.toolbar, binding.contentMain.searchRecyclerView);
         binding.setMainActivity(mainActivityViewModel);
 
 
@@ -33,7 +34,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.search_item){
+        if (item.getItemId() == R.id.search_item) {
             mainActivityViewModel.searchView.open(true);
             return true;
         }
