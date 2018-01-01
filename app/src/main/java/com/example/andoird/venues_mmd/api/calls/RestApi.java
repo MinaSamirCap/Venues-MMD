@@ -17,9 +17,15 @@ import retrofit2.http.Query;
 public interface RestApi {
 
     @GET(ApiUtils.SEARCH_VENUE_URL)
-    Observable<SearchVenueModel> getPosts(@Query("near") String near,
-                                          @Query("client_id") String clientId,
-                                          @Query("client_secret") String clientSecret,
-                                          @Query("v") String date);
+    Observable<SearchVenueModel> getPlacesWithName(@Query("near") String near,
+                                                   @Query("client_id") String clientId,
+                                                   @Query("client_secret") String clientSecret,
+                                                   @Query("v") String date);
+
+    @GET(ApiUtils.SEARCH_VENUE_URL)
+    Observable<SearchVenueModel> getPlacesWithLocation(@Query("ll") String latLng,
+                                                       @Query("client_id") String clientId,
+                                                       @Query("client_secret") String clientSecret,
+                                                       @Query("v") String date);
 
 }

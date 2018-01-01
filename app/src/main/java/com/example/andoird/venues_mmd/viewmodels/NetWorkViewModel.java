@@ -19,13 +19,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
 
-    private Map<String, Subscription> subscriptions;
     private CompositeDisposable mCompositeDisposable;
 
     protected NetWorkViewModel(Context context, T model) {
         super(context, model);
-
-        subscriptions = new HashMap<>();
         mCompositeDisposable = new CompositeDisposable();
     }
 
@@ -81,29 +78,15 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
                         }
                     }
                 }));
-
-        /*String tag = ServiceManager.getInstance().removeTag(observable);
-        unSubscribe(subscriptions.remove(tag));
-        subscriptions.put(tag, subscription);
-        subscription.dispose();*/
     }
 
     public void dispose() {
-        if (mCompositeDisposable != null )/*&& !subscription.isUnsubscribed())*/
+        if (mCompositeDisposable != null )
             mCompositeDisposable.dispose();
     }
 
-    /*
-    public void destroy() {
-        for (Iterator<Map.Entry<String, Subscription>> iterator = subscriptions.entrySet().iterator(); iterator.hasNext(); ) {
-            unSubscribe(iterator.next().getValue());
-            iterator.remove();
-        }
-    }*/
-
     protected interface ProgressController {
         void setProgress();
-
         void removeProgress();
     }
 }

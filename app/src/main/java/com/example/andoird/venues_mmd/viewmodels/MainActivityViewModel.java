@@ -39,7 +39,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     public SearchView searchView;
     public Toolbar toolbar;
     private AppCompatActivity activity;
-    private SearchHistoryTable recentSearchDatabase;
+    private SearchHistoryTable searchHistoryTable;
 
     private RecyclerView recyclerView;
 
@@ -59,7 +59,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     }
 
     private void loadData(String queryPlace) {
-        Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPosts(queryPlace,
+        Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPlacesWithName(queryPlace,
                 ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
@@ -77,7 +77,11 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
 
     @Override
     protected void setModel(SearchVenueModel model) {
-        /*text.set(model.getMeta().getRequestId() + "\n" + model.getResponse().isConfident() + "\n" +
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(new VenueItemAdapter(activity, model.getResponse().getVenuesList()));
+
+         /*text.set(model.getMeta().getRequestId() + "\n" + model.getResponse().isConfident() + "\n" +
                 model.getResponse().getVenuesList().get(0).getContact().getPhone() + "\n" +
                 model.getResponse().getVenuesList().get(0).getLocation().getAddress() + "\n" +
                 model.getResponse().getVenuesList().get(0).getLocation().getState() + "\n" +
@@ -90,23 +94,20 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
                 model.getResponse().getVenuesList().get(0).isHasPerk() + "\n" +
                 model.getResponse().getVenuesList().get(0).isVerified());
 */
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new VenueItemAdapter(activity, model.getResponse().getVenuesList()));
     }
 
     private void setupSearchView() {
 
-        recentSearchDatabase = new SearchHistoryTable(activity);
+        searchHistoryTable = new SearchHistoryTable(activity);
         searchView.setVersionMargins(SearchView.VersionMargins.MENU_ITEM);
         searchView.setHint(R.string.search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                recentSearchDatabase.addItem(new SearchItem(query));
+                final String finalQuery = query.trim();
+                searchHistoryTable.addItem(new SearchItem(finalQuery));
                 searchView.close(true);
-                loadData(query);
-                //dispose();
+                loadData(finalQuery);
                 return true;
             }
 
