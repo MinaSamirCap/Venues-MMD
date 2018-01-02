@@ -60,7 +60,7 @@ dependencies {
 
     //Search View
     implementation 'com.lapism:searchview:5.0.0-alpha7'
-    implementation 'com.google.android:flexbox:0.3.1' //for brings the similar capabilities of CSS Flexible Box Layout Module to Android
+    //implementation 'com.google.android:flexbox:0.3.1' //for brings the similar capabilities of CSS Flexible Box Layout Module to Android
 
 
     testImplementation 'junit:junit:4.12'

@@ -19,6 +19,8 @@ import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
 import com.lapism.searchview.SearchView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
@@ -52,6 +54,9 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
         this.searchView = searchView;
         this.toolbar = toolbar;
         this.recyclerView = recyclerView;
+        searchHistoryTable = new SearchHistoryTable(activity);
+        searchHistoryTable.setHistorySize(4);
+
         activity.setSupportActionBar(toolbar);
         setupSearchView();
         progressVisibility.set(View.GONE);
@@ -80,33 +85,21 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new VenueItemAdapter(activity, model.getResponse().getVenuesList()));
-
-         /*text.set(model.getMeta().getRequestId() + "\n" + model.getResponse().isConfident() + "\n" +
-                model.getResponse().getVenuesList().get(0).getContact().getPhone() + "\n" +
-                model.getResponse().getVenuesList().get(0).getLocation().getAddress() + "\n" +
-                model.getResponse().getVenuesList().get(0).getLocation().getState() + "\n" +
-                model.getResponse().getVenuesList().get(0).getLocation().getFormattedAddress().get(0) + "\n" +
-                model.getResponse().getVenuesList().get(0).getLocation().getFormattedAddress().get(3) + "\n" +
-                model.getResponse().getVenuesList().get(0).getLocation().getLabeledLatLngs().get(0).getLabel() + "\n" +
-                model.getResponse().getVenuesList().get(0).getLocation().getLabeledLatLngs().get(0).getLat() + "\n" +
-                model.getResponse().getVenuesList().get(0).getLocation().getLabeledLatLngs().get(0).getLng() + "\n" +
-                model.getResponse().getVenuesList().get(0).getStats().getUsersCount() + "\n" +
-                model.getResponse().getVenuesList().get(0).isHasPerk() + "\n" +
-                model.getResponse().getVenuesList().get(0).isVerified());
-*/
     }
 
     private void setupSearchView() {
 
-        searchHistoryTable = new SearchHistoryTable(activity);
-        searchView.setVersionMargins(SearchView.VersionMargins.MENU_ITEM);
+        SearchAdapter searchAdapter = new SearchAdapter(activity);
+        searchView.setAdapter(searchAdapter);
         searchView.setHint(R.string.search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 final String finalQuery = query.trim();
-                searchHistoryTable.addItem(new SearchItem(finalQuery));
-                searchView.close(true);
+                if (!itemExist(finalQuery)) {
+                    searchHistoryTable.addItem(new SearchItem(finalQuery));
+                }
+                searchView.close(false);
                 loadData(finalQuery);
                 return true;
             }
@@ -117,7 +110,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
             }
         });
 
-        SearchAdapter searchAdapter = new SearchAdapter(activity);
+
         searchAdapter.setOnSearchItemClickListener(new SearchAdapter.OnSearchItemClickListener() {
             @Override
             public void onSearchItemClick(View view, int position, String text) {
@@ -126,7 +119,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
                 //dispose();
             }
         });
-        searchView.setAdapter(searchAdapter);
+
 
        /* mSearchView.setOnOpenCloseListener(new SearchView.OnOpenCloseListener() {
             @Override
@@ -170,6 +163,17 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
         searchView.setFilters(filter);*/
 
         //use mSearchView.getFiltersStates() to consider filter when performing search
+    }
+
+    private boolean itemExist(String finalQuery) {
+        List<SearchItem> items = searchHistoryTable.getAllItems(null);
+        for (SearchItem item : items) {
+            if (item.getText().equals(finalQuery)) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
 }
