@@ -5,6 +5,14 @@
     <item
         android:id="@+id/search_item"
         android:icon="@drawable/search"
+        android:orderInCategory="100"
         android:title="@string/search"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/gps_item"
+        android:icon="@drawable/gps_icon"
+        android:orderInCategory="99"
+        android:title="@string/nearest_venues"
         app:showAsAction="ifRoom" />
 </menu>

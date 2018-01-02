@@ -1,12 +1,16 @@
 package com.example.andoird.venues_mmd.viewmodels;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.andoird.venues_mmd.App;
 import com.example.andoird.venues_mmd.R;
@@ -14,6 +18,8 @@ import com.example.andoird.venues_mmd.api.calls.RestApi;
 import com.example.andoird.venues_mmd.api.models.SearchVenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.ui.adapters.VenueItemAdapter;
+import com.example.andoird.venues_mmd.utils.GPSTracker;
+import com.example.andoird.venues_mmd.utils.UiUtils;
 import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
@@ -35,6 +41,8 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     @Inject
     Retrofit retrofit;
 
+    private Toast toast;
+
     public ObservableField<String> text = new ObservableField<>();
     public ObservableInt progressVisibility = new ObservableInt();
 
@@ -44,6 +52,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     private SearchHistoryTable searchHistoryTable;
 
     private RecyclerView recyclerView;
+    private double latitude, longitude;
 
     public MainActivityViewModel(AppCompatActivity activity, SearchView searchView,
                                  Toolbar toolbar, RecyclerView recyclerView) {
@@ -65,6 +74,23 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
 
     private void loadData(String queryPlace) {
         Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPlacesWithName(queryPlace,
+                ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
+
+        makeNetworkRequest(posts, new ProgressController() {
+            @Override
+            public void setProgress() {
+                progressVisibility.set(View.VISIBLE);
+            }
+
+            @Override
+            public void removeProgress() {
+                progressVisibility.set(View.GONE);
+            }
+        });
+    }
+
+    private void loadData(double latitude, double longitude) {
+        Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPlacesWithLocation(latitude + "," + longitude,
                 ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
@@ -176,4 +202,42 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
 
     }
 
+    public void getLocationPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    GPSTracker.PERMISSIONS_REQUEST_ACCESS_LOCATION);
+            toast = UiUtils.displayToast(activity, toast, "permission denied");
+            toast.show();
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            // Android version is lesser than 6.0 or the permission is already granted.
+            GPSTracker gps = new GPSTracker(activity);
+            if (gps.canGetLocation()) {
+                latitude = gps.getLatitude();
+                longitude = gps.getLongitude();
+                loadData(latitude, longitude);
+            } else {
+                toast = UiUtils.displayToast(activity, toast, "please turn on GPS");
+                toast.show();
+            }
+
+        }
+    }
+
+    public void permissionResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == GPSTracker.PERMISSIONS_REQUEST_ACCESS_LOCATION) {
+            GPSTracker gps = new GPSTracker(activity);
+            if (gps.canGetLocation()) {
+                latitude = gps.getLatitude();
+                longitude = gps.getLongitude();
+                loadData(latitude, longitude);
+            } else {
+                toast = UiUtils.displayToast(activity, toast, "please turn on GPS");
+                toast.show();
+            }
+        }
+    }
 }

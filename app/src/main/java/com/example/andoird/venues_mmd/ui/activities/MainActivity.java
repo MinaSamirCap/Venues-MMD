@@ -2,6 +2,7 @@ package com.example.andoird.venues_mmd.ui.activities;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,10 +35,24 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.search_item) {
-            mainActivityViewModel.searchView.open(true);
-            return true;
+
+        switch (item.getItemId()) {
+            case R.id.search_item:
+                mainActivityViewModel.searchView.open(true);
+                return true;
+            case R.id.gps_item:
+                mainActivityViewModel.getLocationPermission();
+                return true;
+            default:
+                return false;
         }
-        return false;
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mainActivityViewModel.permissionResult(requestCode, permissions, grantResults);
     }
 }

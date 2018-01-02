@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Venues-MMD</string>
     <string name="search">Search</string>
+    <string name="nearest_venues">Nearest Venues</string>
 </resources>
