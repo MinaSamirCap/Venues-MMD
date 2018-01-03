@@ -33,6 +33,10 @@ public class VenueModel implements Parcelable {
     @Expose
     private StatsModel stats;
 
+    @SerializedName("beenHere")
+    @Expose
+    private BeenHereModel beenHere;
+
     @SerializedName("venueRatingBlacklisted")
     @Expose
     private boolean venueRatingBlacklisted;
@@ -58,6 +62,7 @@ public class VenueModel implements Parcelable {
         this.location = in.readParcelable(LocationModel.class.getClassLoader());
         this.verified = in.readByte() != 0;
         this.stats = in.readParcelable(StatsModel.class.getClassLoader());
+        this.beenHere = in.readParcelable(BeenHereModel.class.getClassLoader());
         this.venueRatingBlacklisted = in.readByte() != 0;
         this.referralId = in.readString();
         this.hasPerk = in.readByte() != 0;
@@ -123,6 +128,14 @@ public class VenueModel implements Parcelable {
         this.stats = stats;
     }
 
+    public BeenHereModel getBeenHere() {
+        return beenHere;
+    }
+
+    public void setBeenHere(BeenHereModel beenHere) {
+        this.beenHere = beenHere;
+    }
+
     public boolean isVenueRatingBlacklisted() {
         return venueRatingBlacklisted;
     }
@@ -158,6 +171,7 @@ public class VenueModel implements Parcelable {
         dest.writeParcelable(location, flags);
         dest.writeByte((byte) (verified ? 1 : 0));
         dest.writeParcelable(stats, flags);
+        dest.writeParcelable(beenHere, flags);
         dest.writeByte((byte) (venueRatingBlacklisted ? 1 : 0));
         dest.writeString(referralId);
         dest.writeByte((byte) (hasPerk ? 1 : 0));

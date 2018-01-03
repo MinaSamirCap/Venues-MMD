@@ -25,6 +25,9 @@ public class LocationModel implements Parcelable {
     @SerializedName("lng")
     @Expose
     private double lng;
+    @SerializedName("distance")
+    @Expose
+    private double distance;
     @SerializedName("cc")
     @Expose
     private String cc;
@@ -108,6 +111,14 @@ public class LocationModel implements Parcelable {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     public String getCc() {

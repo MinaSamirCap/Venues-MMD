@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.example.andoird.venues_mmd.App;
 import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.api.calls.RestApi;
 import com.example.andoird.venues_mmd.api.models.SearchVenueModel;
+import com.example.andoird.venues_mmd.api.models.VenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.ui.adapters.VenueItemAdapter;
 import com.example.andoird.venues_mmd.utils.GPSTracker;
@@ -24,12 +26,16 @@ import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
 import com.lapism.searchview.SearchView;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import retrofit2.Retrofit;
 
 /**
@@ -51,8 +57,9 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     private AppCompatActivity activity;
     private SearchHistoryTable searchHistoryTable;
 
-    private RecyclerView recyclerView;
     private double latitude, longitude;
+    private VenueItemAdapter venueItemAdapter;
+    private List<VenueModel> data = new ArrayList<>();
 
     public MainActivityViewModel(AppCompatActivity activity, SearchView searchView,
                                  Toolbar toolbar, RecyclerView recyclerView) {
@@ -62,14 +69,31 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
         this.activity = activity;
         this.searchView = searchView;
         this.toolbar = toolbar;
-        this.recyclerView = recyclerView;
         searchHistoryTable = new SearchHistoryTable(activity);
         searchHistoryTable.setHistorySize(4);
 
         activity.setSupportActionBar(toolbar);
         setupSearchView();
+        setupRecyclerView(recyclerView);
         progressVisibility.set(View.GONE);
         //loadData();
+    }
+
+    private void setupRecyclerView(RecyclerView recyclerView) {
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(activity)
+                        .color(ContextCompat.getColor(activity, R.color.transparent))
+                        .sizeResId(R.dimen.divider)
+                        .build());
+        SlideInUpAnimator slideInUpAnimator = new SlideInUpAnimator();
+        slideInUpAnimator.setAddDuration(500);
+        recyclerView.setItemAnimator(slideInUpAnimator);
+
+        venueItemAdapter = new VenueItemAdapter(activity, data);
+        recyclerView.setAdapter(venueItemAdapter);
     }
 
     private void loadData(String queryPlace) {
@@ -108,9 +132,8 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
 
     @Override
     protected void setModel(SearchVenueModel model) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new VenueItemAdapter(activity, model.getResponse().getVenuesList()));
+        data.addAll(model.getResponse().getVenuesList());
+        venueItemAdapter.notifyItemRangeInserted(0, data.size());
     }
 
     private void setupSearchView() {
