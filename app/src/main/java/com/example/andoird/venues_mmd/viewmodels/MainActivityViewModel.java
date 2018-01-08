@@ -132,7 +132,14 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
 
     @Override
     protected void setModel(SearchVenueModel model) {
+        //int prevDataSize = data.size();
+
+        if (data.size() > 0) {
+            venueItemAdapter.notifyItemRangeRemoved(0, data.size());
+            data.clear();
+        }
         data.addAll(model.getResponse().getVenuesList());
+        //venueItemAdapter.notifyDataSetChanged();
         venueItemAdapter.notifyItemRangeInserted(0, data.size());
     }
 

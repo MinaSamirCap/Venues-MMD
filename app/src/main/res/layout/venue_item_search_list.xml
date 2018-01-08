@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="venueModel"
@@ -29,7 +32,8 @@
                 android:padding="5dp"
                 android:text="@{venueModel.name}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/app_name" />
 
             <TextView
                 android:id="@+id/phone_text_view"
@@ -38,7 +42,8 @@
                 android:padding="5dp"
                 android:text="@{venueModel.contact.phone}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/venue_name_text_view" />
+                app:layout_constraintTop_toBottomOf="@+id/venue_name_text_view"
+                tools:text="@string/phone" />
 
             <TextView
                 android:id="@+id/address_text_view"
@@ -47,7 +52,8 @@
                 android:padding="5dp"
                 android:text="@{venueModel.location.address.concat(@string/comma) + venueModel.location.country}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phone_text_view" />
+                app:layout_constraintTop_toBottomOf="@+id/phone_text_view"
+                tools:text="@string/address" />
 
             <TextView
                 android:id="@+id/here_now_text_view"
@@ -56,7 +62,8 @@
                 android:padding="5dp"
                 android:text="@{@string/here_now + venueModel.beenHere.lastCheckinExpiredAt}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/here_now" />
 
             <TextView
                 android:id="@+id/distance_text_view"
@@ -64,8 +71,10 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@{venueModel.location.distance + (@string/meter)}"
+                android:visibility="@{venueModel.location.getBooleanDistance() ? View.VISIBLE :View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/here_now_text_view" />
+                app:layout_constraintTop_toBottomOf="@+id/here_now_text_view"
+                tools:text="0.0M" />
 
 
         </android.support.constraint.ConstraintLayout>

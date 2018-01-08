@@ -6,4 +6,6 @@
     <string name="meter">M</string>
     <string name="here_now">Here now: </string>
     <string name="distance">Distance: </string>
+    <string name="address">Address</string>
+    <string name="phone">Phone</string>
 </resources>

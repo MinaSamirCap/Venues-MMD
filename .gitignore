@@ -7,3 +7,6 @@
 /build
 /captures
 .externalNativeBuild
+
+#remove any apk 
+*.apk 

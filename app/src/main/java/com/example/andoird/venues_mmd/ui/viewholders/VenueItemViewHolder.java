@@ -20,8 +20,10 @@ public class VenueItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(@NonNull VenueModel venueModel) {
-        bindings.setVariable(BR.venueModel, venueModel);
+        bindings.setVariable(BR.venueModel, venueModel); //venueNameTextView
+        bindings.getRoot();
         bindings.executePendingBindings();
+
     }
 
 

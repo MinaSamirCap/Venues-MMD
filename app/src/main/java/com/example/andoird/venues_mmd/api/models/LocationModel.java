@@ -117,6 +117,14 @@ public class LocationModel implements Parcelable {
         return distance;
     }
 
+    public boolean getBooleanDistance(){
+        if(distance == 0){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
     public void setDistance(double distance) {
         this.distance = distance;
     }

@@ -55,4 +55,10 @@ public class MainActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mainActivityViewModel.permissionResult(requestCode, permissions, grantResults);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mainActivityViewModel.dispose();
+    }
 }

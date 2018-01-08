@@ -33,6 +33,7 @@ public class VenueItemAdapter extends RecyclerView.Adapter<VenueItemViewHolder> 
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ViewDataBinding viewDataBinding = DataBindingUtil.inflate(inflater, R.layout.venue_item_search_list, parent, false);
+
         return new VenueItemViewHolder(viewDataBinding);
     }
 
