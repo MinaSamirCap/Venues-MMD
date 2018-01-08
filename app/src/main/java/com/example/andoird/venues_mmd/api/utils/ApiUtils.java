@@ -13,7 +13,11 @@ public class ApiUtils {
     public static final String BASE_URL = "https://api.foursquare.com";
     public static final String FOURSQUARE_API_VERSION = "/v2";
 
+    public static final String VENUE_ID = "venue_id";
+
     public static final String SEARCH_VENUE_URL = FOURSQUARE_API_VERSION + "/venues/search?";
+    public static final String DETAILS_VENUE_URL = FOURSQUARE_API_VERSION + "/venues/{" + VENUE_ID + "}?";
+
 
 
 }

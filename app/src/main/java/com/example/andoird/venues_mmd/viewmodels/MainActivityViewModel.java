@@ -1,6 +1,7 @@
 package com.example.andoird.venues_mmd.viewmodels;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -16,9 +17,10 @@ import android.widget.Toast;
 import com.example.andoird.venues_mmd.App;
 import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.api.calls.RestApi;
-import com.example.andoird.venues_mmd.api.models.SearchVenueModel;
+import com.example.andoird.venues_mmd.api.models.SearchVenueModelWrapper;
 import com.example.andoird.venues_mmd.api.models.VenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
+import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
 import com.example.andoird.venues_mmd.ui.adapters.VenueItemAdapter;
 import com.example.andoird.venues_mmd.utils.GPSTracker;
 import com.example.andoird.venues_mmd.utils.UiUtils;
@@ -34,7 +36,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import retrofit2.Retrofit;
 
@@ -42,7 +43,7 @@ import retrofit2.Retrofit;
  * Created by mina on 07/12/17.
  */
 
-public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
+public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrapper> {
 
     @Inject
     Retrofit retrofit;
@@ -64,7 +65,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     public MainActivityViewModel(AppCompatActivity activity, SearchView searchView,
                                  Toolbar toolbar, RecyclerView recyclerView) {
 
-        super(activity, new SearchVenueModel());
+        super(activity, new SearchVenueModelWrapper());
         ((App) activity.getApplication()).getNetComponent().inject(this);
         this.activity = activity;
         this.searchView = searchView;
@@ -97,7 +98,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     }
 
     private void loadData(String queryPlace) {
-        Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPlacesWithName(queryPlace,
+        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithName(queryPlace,
                 ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
@@ -114,7 +115,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     }
 
     private void loadData(double latitude, double longitude) {
-        Observable<SearchVenueModel> posts = retrofit.create(RestApi.class).getPlacesWithLocation(latitude + "," + longitude,
+        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithLocation(latitude + "," + longitude,
                 ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
@@ -131,7 +132,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
     }
 
     @Override
-    protected void setModel(SearchVenueModel model) {
+    protected void setModel(SearchVenueModelWrapper model) {
         //int prevDataSize = data.size();
 
         if (data.size() > 0) {
@@ -141,6 +142,9 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModel> {
         data.addAll(model.getResponse().getVenuesList());
         //venueItemAdapter.notifyDataSetChanged();
         venueItemAdapter.notifyItemRangeInserted(0, data.size());
+
+        Intent intent = VenueDetailsActivity.openVenueDetailsActivity(activity, data.get(0).getId());
+        activity.startActivity(intent);
     }
 
     private void setupSearchView() {

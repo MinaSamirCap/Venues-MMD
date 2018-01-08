@@ -35,7 +35,8 @@ dependencies {
 
     //Dagger
     implementation 'com.google.dagger:dagger-android:2.11'
-    implementation 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
+    implementation 'com.google.dagger:dagger-android-support:2.11'
+    // if you use the support libraries
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
 
@@ -63,7 +64,8 @@ dependencies {
     //implementation 'com.google.android:flexbox:0.3.1' //for brings the similar capabilities of CSS Flexible Box Layout Module to Android
 
     //RecyclerView
-    implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0' //for add dividers in recycler view
+    implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    //for add dividers in recycler view
     implementation 'jp.wasabeef:recyclerview-animators:2.2.7' //for animating recycler view
 
     testImplementation 'junit:junit:4.12'

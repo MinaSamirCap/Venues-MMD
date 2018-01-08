@@ -12,7 +12,7 @@ import java.util.List;
  * Created by mina on 07/12/17.
  */
 
-public class ResponseModel implements Parcelable {
+public class SearchVenueResponseModel implements Parcelable {
 
     @SerializedName("confident")
     @Expose
@@ -23,29 +23,29 @@ public class ResponseModel implements Parcelable {
     private List<VenueModel> venuesList;
 
 
-    public ResponseModel() {
+    public SearchVenueResponseModel() {
     }
 
-    public ResponseModel(boolean confident) {
+    public SearchVenueResponseModel(boolean confident) {
         this.confident = confident;
     }
 
-    ResponseModel(Parcel in) {
+    SearchVenueResponseModel(Parcel in) {
         this.confident = in.readByte() != 0;
         this.venuesList = in.createTypedArrayList(VenueModel.CREATOR);
 
     }
 
-    public static final Creator<ResponseModel> CREATOR = new Creator<ResponseModel>() {
+    public static final Creator<SearchVenueResponseModel> CREATOR = new Creator<SearchVenueResponseModel>() {
 
         @Override
-        public ResponseModel createFromParcel(Parcel in) {
-            return new ResponseModel(in);
+        public SearchVenueResponseModel createFromParcel(Parcel in) {
+            return new SearchVenueResponseModel(in);
         }
 
         @Override
-        public ResponseModel[] newArray(int size) {
-            return new ResponseModel[size];
+        public SearchVenueResponseModel[] newArray(int size) {
+            return new SearchVenueResponseModel[size];
         }
     };
 

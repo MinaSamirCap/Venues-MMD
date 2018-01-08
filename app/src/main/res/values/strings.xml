@@ -2,6 +2,7 @@
     <string name="app_name">Venues-MMD</string>
     <string name="search">Search</string>
     <string name="nearest_venues">Nearest Venues</string>
+    <string name="venue_details">Venue Details</string>
     <string name="comma">,</string>
     <string name="meter">M</string>
     <string name="here_now">Here now: </string>

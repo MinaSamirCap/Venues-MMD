@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by mina on 07/12/17.
  */
 
-public class SearchVenueModel implements Parcelable {
+public class VenueDetailsModelWrapper implements Parcelable {
 
     @SerializedName("meta")
     @Expose
@@ -18,39 +18,37 @@ public class SearchVenueModel implements Parcelable {
 
     @SerializedName("response")
     @Expose
-    private ResponseModel response;
+    private VenueDetailsResponseModel response;
 
 
-    public SearchVenueModel() {
+    public VenueDetailsModelWrapper() {
     }
 
-    public SearchVenueModel(MetaModel meta, ResponseModel response) {
+    public VenueDetailsModelWrapper(MetaModel meta, VenueDetailsResponseModel response) {
         super();
         this.meta = meta;
         this.response = response;
     }
 
-    SearchVenueModel(Parcel in) {
+    VenueDetailsModelWrapper(Parcel in) {
         this.meta = in.readParcelable(MetaModel.class.getClassLoader());
-        this.response = in.readParcelable(ResponseModel.class.getClassLoader());
+        this.response = in.readParcelable(SearchVenueResponseModel.class.getClassLoader());
     }
 
-    public final static Parcelable.Creator<SearchVenueModel> CREATOR = new Creator<SearchVenueModel>() {
+    public final static Creator<VenueDetailsModelWrapper> CREATOR = new Creator<VenueDetailsModelWrapper>() {
 
 
         @Override
-        public SearchVenueModel createFromParcel(Parcel in) {
-            return new SearchVenueModel(in);
+        public VenueDetailsModelWrapper createFromParcel(Parcel in) {
+            return new VenueDetailsModelWrapper(in);
         }
 
         @Override
-        public SearchVenueModel[] newArray(int size) {
-            return (new SearchVenueModel[size]);
+        public VenueDetailsModelWrapper[] newArray(int size) {
+            return (new VenueDetailsModelWrapper[size]);
         }
 
     };
-
-
 
 
     public MetaModel getMeta() {
@@ -61,11 +59,11 @@ public class SearchVenueModel implements Parcelable {
         this.meta = meta;
     }
 
-    public ResponseModel getResponse() {
+    public VenueDetailsResponseModel getResponse() {
         return response;
     }
 
-    public void setResponse(ResponseModel response) {
+    public void setResponse(VenueDetailsResponseModel response) {
         this.response = response;
     }
 
