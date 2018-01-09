@@ -142,9 +142,6 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
         data.addAll(model.getResponse().getVenuesList());
         //venueItemAdapter.notifyDataSetChanged();
         venueItemAdapter.notifyItemRangeInserted(0, data.size());
-
-        Intent intent = VenueDetailsActivity.openVenueDetailsActivity(activity, data.get(0).getId());
-        activity.startActivity(intent);
     }
 
     private void setupSearchView() {

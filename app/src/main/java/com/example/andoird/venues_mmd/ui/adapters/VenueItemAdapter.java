@@ -1,6 +1,7 @@
 package com.example.andoird.venues_mmd.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import com.example.andoird.venues_mmd.BR;
 import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.api.models.VenueModel;
+import com.example.andoird.venues_mmd.databinding.VenueItemSearchListBinding;
+import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
 import com.example.andoird.venues_mmd.ui.viewholders.VenueItemViewHolder;
 
 import java.util.List;
@@ -32,14 +35,23 @@ public class VenueItemAdapter extends RecyclerView.Adapter<VenueItemViewHolder> 
     public VenueItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ViewDataBinding viewDataBinding = DataBindingUtil.inflate(inflater, R.layout.venue_item_search_list, parent, false);
+        VenueItemSearchListBinding bind = DataBindingUtil.inflate(inflater, R.layout.venue_item_search_list, parent, false);
 
-        return new VenueItemViewHolder(viewDataBinding);
+        return new VenueItemViewHolder(bind);
     }
 
     @Override
     public void onBindViewHolder(VenueItemViewHolder holder, int position) {
         holder.bind(data.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = VenueDetailsActivity.openVenueDetailsActivity(context,
+                        data.get(holder.getAdapterPosition()).getId());
+                context.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
