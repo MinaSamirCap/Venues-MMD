@@ -26,7 +26,7 @@ public class VenueDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivityTransitions();
+        //initActivityTransitions();
         ActivityVenueDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_venue_details);
         venueDetailsActivityViewModel = new VenueDetailsActivityViewModel(this);
         binding.setDetailsActivity(venueDetailsActivityViewModel);
@@ -39,27 +39,8 @@ public class VenueDetailsActivity extends BaseActivity {
         binding.collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         binding.title.setText(itemTitle);
 
-        statusBarColor(binding.image, binding.collapsingToolbar);
+        //statusBarColor(binding.image, binding.collapsingToolbar);
 
-    }
-
-    private void statusBarColor(ImageView imageView, CollapsingToolbarLayout collapsingToolbar) {
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            public void onGenerated(Palette palette) {
-                applyPalette(palette, collapsingToolbar);
-            }
-        });
-    }
-
-    /// change the color of toolbar to match the pallet I get from the image ..
-    private void applyPalette(Palette palette, CollapsingToolbarLayout collapsingToolbar) {
-        int primaryDark = getResources().getColor(R.color.primary_dark);
-        int primary = getResources().getColor(R.color.primary);
-        collapsingToolbar.setContentScrimColor(palette.getMutedColor(primary));
-        collapsingToolbar.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
-        //updateBackground((FloatingActionButton) findViewById(R.id.fab), palette);
-        supportStartPostponedEnterTransition();
     }
 
     public static Intent openVenueDetailsActivity(Context context, String venueId) {
@@ -74,12 +55,34 @@ public class VenueDetailsActivity extends BaseActivity {
         venueDetailsActivityViewModel.dispose();
     }
 
-    private void initActivityTransitions() {
+
+    /*private void statusBarColor(ImageView imageView, CollapsingToolbarLayout collapsingToolbar) {
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            public void onGenerated(Palette palette) {
+                applyPalette(palette, collapsingToolbar);
+            }
+        });
+    }*/
+
+    /// change the color of toolbar to match the pallet I get from the image ..
+    /*private void applyPalette(Palette palette, CollapsingToolbarLayout collapsingToolbar) {
+        int primaryDark = getResources().getColor(R.color.primary_dark);
+        int primary = getResources().getColor(R.color.primary);
+        collapsingToolbar.setContentScrimColor(palette.getMutedColor(primary));
+        collapsingToolbar.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
+        //updateBackground((FloatingActionButton) findViewById(R.id.fab), palette);
+        supportStartPostponedEnterTransition();
+    }*/
+
+
+
+    /*private void initActivityTransitions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Slide transition = new Slide();
             transition.excludeTarget(android.R.id.statusBarBackground, true);
             getWindow().setEnterTransition(transition);
             getWindow().setReturnTransition(transition);
         }
-    }
+    }*/
 }

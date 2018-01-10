@@ -29,7 +29,7 @@
             android:name=".ui.activities.VenueDetailsActivity"
             android:label="@string/venue_details"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/NoActionBar">
+            android:theme="@style/DetailsTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
