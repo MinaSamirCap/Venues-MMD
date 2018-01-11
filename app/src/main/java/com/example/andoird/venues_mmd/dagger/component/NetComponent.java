@@ -4,6 +4,7 @@ import com.example.andoird.venues_mmd.dagger.module.AppModule;
 import com.example.andoird.venues_mmd.dagger.module.NetModule;
 import com.example.andoird.venues_mmd.ui.activities.MainActivity;
 import com.example.andoird.venues_mmd.viewmodels.MainActivityViewModel;
+import com.example.andoird.venues_mmd.viewmodels.NetWorkViewModel;
 import com.example.andoird.venues_mmd.viewmodels.VenueDetailsActivityViewModel;
 
 import javax.inject.Singleton;
@@ -21,4 +22,7 @@ public interface NetComponent {
 
     void inject(MainActivityViewModel mainActivityViewModel);
     void inject(VenueDetailsActivityViewModel venueDetailsActivityViewModel);
+
+    //void inject(NetWorkViewModel NetWorkViewModel);
+    //<T> void inject(NetWorkViewModel<T> tNetWorkViewModel);
 }

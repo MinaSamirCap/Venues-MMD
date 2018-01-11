@@ -25,6 +25,11 @@ public class LocationModel implements Parcelable {
     @SerializedName("lng")
     @Expose
     private double lng;
+
+    @SerializedName("labeledLatLngs")
+    @Expose
+    private ArrayList<LabelLatLngModel> labeledLatLngs;
+
     @SerializedName("distance")
     @Expose
     private double distance;
@@ -45,13 +50,7 @@ public class LocationModel implements Parcelable {
     @SerializedName("formattedAddress")
     @Expose
     private ArrayList<String> formattedAddress;
-    @SerializedName("labeledLatLngs")
-    @Expose
-    private ArrayList<LabelLatLngModel> labeledLatLngs;
 
-
-    public LocationModel() {
-    }
 
     LocationModel(Parcel in) {
         this.address = in.readString();
@@ -117,10 +116,10 @@ public class LocationModel implements Parcelable {
         return distance;
     }
 
-    public boolean getBooleanDistance(){
-        if(distance == 0){
+    public boolean getBooleanDistance() {
+        if (distance == 0) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }

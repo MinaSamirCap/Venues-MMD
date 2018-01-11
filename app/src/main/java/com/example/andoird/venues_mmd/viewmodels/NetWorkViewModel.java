@@ -1,7 +1,10 @@
 package com.example.andoird.venues_mmd.viewmodels;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 
+
+import com.example.andoird.venues_mmd.App;
 
 import org.reactivestreams.Subscription;
 
@@ -9,20 +12,27 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
 
 
 public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
 
+    /*@Inject
+    Retrofit retrofit;*/
+
     private CompositeDisposable mCompositeDisposable;
 
-    protected NetWorkViewModel(Context context, T model) {
+    protected NetWorkViewModel(AppCompatActivity context, T model) {
         super(context, model);
+        //((App) context.getApplication()).getNetComponent().inject(this);
         mCompositeDisposable = new CompositeDisposable();
     }
 

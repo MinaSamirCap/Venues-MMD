@@ -25,21 +25,51 @@ public class VenueModel implements Parcelable {
     @Expose
     private LocationModel location;
 
+
+    @SerializedName("canonicalUrl")
+    @Expose
+    private String canonicalUrl;
+    /////////// categories object ..
     @SerializedName("verified")
     @Expose
     private boolean verified;
 
+
     @SerializedName("stats")
     @Expose
     private StatsModel stats;
-
+    @SerializedName("url")
+    @Expose
+    private String url;
+    @SerializedName("likes")
+    @Expose
+    private LikesModel likes;
+    @SerializedName("dislike")
+    @Expose
+    private boolean dislike;
+    @SerializedName("ok")
+    @Expose
+    private boolean ok;
+    @SerializedName("rating")
+    @Expose
+    private int rating;
+    @SerializedName("ratingColor")
+    @Expose
+    private String ratingColor;
+    @SerializedName("ratingSignals")
+    @Expose
+    private int ratingSignals;
+    @SerializedName("venueRatingBlacklisted")
+    @Expose
+    private boolean venueRatingBlacklisted;
+    @SerializedName("allowMenuUrlEdit")
+    @Expose
+    private boolean allowMenuUrlEdit;
     @SerializedName("beenHere")
     @Expose
     private BeenHereModel beenHere;
 
-    @SerializedName("venueRatingBlacklisted")
-    @Expose
-    private boolean venueRatingBlacklisted;
+    /////////// special object ..
 
     @SerializedName("referralId")
     @Expose
@@ -58,12 +88,23 @@ public class VenueModel implements Parcelable {
     }
 
     protected VenueModel(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
         this.contact = in.readParcelable(ContactModel.class.getClassLoader());
         this.location = in.readParcelable(LocationModel.class.getClassLoader());
+        this.canonicalUrl = in.readString();
         this.verified = in.readByte() != 0;
         this.stats = in.readParcelable(StatsModel.class.getClassLoader());
-        this.beenHere = in.readParcelable(BeenHereModel.class.getClassLoader());
+        this.url = in.readString();
+        this.likes = in.readParcelable(LikesModel.class.getClassLoader());
+        this.dislike = in.readByte() != 0;
+        this.ok = in.readByte() != 0;
+        this.rating = in.readInt();
+        this.ratingColor = in.readString();
+        this.ratingSignals = in.readInt();
         this.venueRatingBlacklisted = in.readByte() != 0;
+        this.allowMenuUrlEdit = in.readByte() != 0;
+        this.beenHere = in.readParcelable(BeenHereModel.class.getClassLoader());
         this.referralId = in.readString();
         this.hasPerk = in.readByte() != 0;
     }
@@ -160,6 +201,22 @@ public class VenueModel implements Parcelable {
         this.hasPerk = hasPerk;
     }
 
+    public String getCanonicalUrl() {
+        return canonicalUrl;
+    }
+
+    public void setCanonicalUrl(String canonicalUrl) {
+        this.canonicalUrl = canonicalUrl;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -167,12 +224,23 @@ public class VenueModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
         dest.writeParcelable(contact, flags);
         dest.writeParcelable(location, flags);
+        dest.writeString(canonicalUrl);
         dest.writeByte((byte) (verified ? 1 : 0));
         dest.writeParcelable(stats, flags);
-        dest.writeParcelable(beenHere, flags);
+        dest.writeString(url);
+        dest.writeParcelable(likes, flags);
+        dest.writeByte((byte) (dislike ? 1 : 0));
+        dest.writeByte((byte) (ok ? 1 : 0));
+        dest.writeInt(rating);
+        dest.writeString(ratingColor);
+        dest.writeInt(ratingSignals);
         dest.writeByte((byte) (venueRatingBlacklisted ? 1 : 0));
+        dest.writeByte((byte) (allowMenuUrlEdit ? 1 : 0));
+        dest.writeParcelable(beenHere, flags);
         dest.writeString(referralId);
         dest.writeByte((byte) (hasPerk ? 1 : 0));
     }

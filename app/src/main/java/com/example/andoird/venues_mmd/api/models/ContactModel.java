@@ -28,16 +28,9 @@ public class ContactModel implements Parcelable {
     @Expose
     private String facebookName;
 
-    public ContactModel() {
-    }
-
-    public ContactModel(String phone, String formattedPhone, String facebook, String facebookUsername, String facebookName) {
-        this.phone = phone;
-        this.formattedPhone = formattedPhone;
-        this.facebook = facebook;
-        this.facebookUsername = facebookUsername;
-        this.facebookName = facebookName;
-    }
+    @SerializedName("twitter")
+    @Expose
+    private String twitter;
 
 
     ContactModel(Parcel in) {
@@ -46,6 +39,7 @@ public class ContactModel implements Parcelable {
         this.facebook = in.readString();
         this.facebookUsername = in.readString();
         this.facebookName = in.readString();
+        this.twitter = in.readString();
     }
 
 
@@ -104,12 +98,21 @@ public class ContactModel implements Parcelable {
         this.facebookName = facebookName;
     }
 
+    public String getTwitter() {
+        return twitter;
+    }
+
+    public void setTwitter(String twitter) {
+        this.twitter = twitter;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(phone);
         dest.writeString(formattedPhone);
         dest.writeString(facebook);
         dest.writeString(facebookUsername);
         dest.writeString(facebookName);
+        dest.writeString(twitter);
     }
 
     public int describeContents() {

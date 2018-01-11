@@ -12,9 +12,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class BeenHereModel implements Parcelable {
 
+    @SerializedName("count")
+    @Expose
+    private int count;
+    @SerializedName("unconfirmedCount")
+    @Expose
+    private int unconfirmedCount;
+    @SerializedName("marked")
+    @Expose
+    private boolean marked;
     @SerializedName("lastCheckinExpiredAt")
     @Expose
     private int lastCheckinExpiredAt;
+
 
     public BeenHereModel() {
     }
@@ -24,6 +34,9 @@ public class BeenHereModel implements Parcelable {
     }
 
     BeenHereModel(Parcel in) {
+        this.count = in.readInt();
+        this.unconfirmedCount = in.readInt();
+        this.marked = in.readByte() != 0;
         this.lastCheckinExpiredAt = in.readInt();
     }
 
@@ -50,15 +63,41 @@ public class BeenHereModel implements Parcelable {
         this.lastCheckinExpiredAt = lastCheckinExpiredAt;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getUnconfirmedCount() {
+        return unconfirmedCount;
+    }
+
+    public void setUnconfirmedCount(int unconfirmedCount) {
+        this.unconfirmedCount = unconfirmedCount;
+    }
+
+    public boolean isMarked() {
+        return marked;
+    }
+
+    public void setMarked(boolean marked) {
+        this.marked = marked;
+    }
+
     public int describeContents() {
         return 0;
     }
 
 
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(count);
+        dest.writeInt(unconfirmedCount);
+        dest.writeByte((byte) (marked ? 1 : 0));
         dest.writeInt(lastCheckinExpiredAt);
     }
-
 
 
 }
