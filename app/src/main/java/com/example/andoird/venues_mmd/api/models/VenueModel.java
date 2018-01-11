@@ -68,7 +68,9 @@ public class VenueModel implements Parcelable {
     @SerializedName("beenHere")
     @Expose
     private BeenHereModel beenHere;
-
+    @SerializedName("")
+    @Expose
+    private HoursModel hours;
     /////////// special object ..
 
     @SerializedName("referralId")
@@ -105,6 +107,7 @@ public class VenueModel implements Parcelable {
         this.venueRatingBlacklisted = in.readByte() != 0;
         this.allowMenuUrlEdit = in.readByte() != 0;
         this.beenHere = in.readParcelable(BeenHereModel.class.getClassLoader());
+        this.hours = in.readParcelable(HoursModel.class.getClassLoader());
         this.referralId = in.readString();
         this.hasPerk = in.readByte() != 0;
     }
@@ -217,6 +220,70 @@ public class VenueModel implements Parcelable {
         this.url = url;
     }
 
+    public LikesModel getLikes() {
+        return likes;
+    }
+
+    public void setLikes(LikesModel likes) {
+        this.likes = likes;
+    }
+
+    public boolean isDislike() {
+        return dislike;
+    }
+
+    public void setDislike(boolean dislike) {
+        this.dislike = dislike;
+    }
+
+    public boolean isOk() {
+        return ok;
+    }
+
+    public void setOk(boolean ok) {
+        this.ok = ok;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getRatingColor() {
+        return ratingColor;
+    }
+
+    public void setRatingColor(String ratingColor) {
+        this.ratingColor = ratingColor;
+    }
+
+    public int getRatingSignals() {
+        return ratingSignals;
+    }
+
+    public void setRatingSignals(int ratingSignals) {
+        this.ratingSignals = ratingSignals;
+    }
+
+    public boolean isAllowMenuUrlEdit() {
+        return allowMenuUrlEdit;
+    }
+
+    public void setAllowMenuUrlEdit(boolean allowMenuUrlEdit) {
+        this.allowMenuUrlEdit = allowMenuUrlEdit;
+    }
+
+    public HoursModel getHours() {
+        return hours;
+    }
+
+    public void setHours(HoursModel hours) {
+        this.hours = hours;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -241,6 +308,7 @@ public class VenueModel implements Parcelable {
         dest.writeByte((byte) (venueRatingBlacklisted ? 1 : 0));
         dest.writeByte((byte) (allowMenuUrlEdit ? 1 : 0));
         dest.writeParcelable(beenHere, flags);
+        dest.writeParcelable(hours, flags);
         dest.writeString(referralId);
         dest.writeByte((byte) (hasPerk ? 1 : 0));
     }
