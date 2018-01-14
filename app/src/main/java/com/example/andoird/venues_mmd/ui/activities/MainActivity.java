@@ -1,12 +1,16 @@
 package com.example.andoird.venues_mmd.ui.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.andoird.venues_mmd.R;
+import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.databinding.ActivityMainBinding;
 import com.example.andoird.venues_mmd.viewmodels.MainActivityViewModel;
 
@@ -24,7 +28,26 @@ public class MainActivity extends BaseActivity {
                 binding.toolbar, binding.contentMain.searchRecyclerView);
         binding.setMainActivity(mainActivityViewModel);
 
+        binding.contentMain.oAuthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiUtils.O_AUTH_URL));
+                startActivity(intent);
+            }
+        });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Uri uri = getIntent().getData();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Uri uri = getIntent().getData();
     }
 
     @Override
