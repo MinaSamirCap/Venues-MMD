@@ -4,12 +4,17 @@ import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.andoird.venues_mmd.App;
+import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.api.calls.RestApi;
 import com.example.andoird.venues_mmd.api.models.VenueDetailsModelWrapper;
+import com.example.andoird.venues_mmd.api.models.VenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
+import com.example.andoird.venues_mmd.databinding.ActivityVenueDetailsBinding;
 import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
@@ -26,14 +31,21 @@ public class VenueDetailsActivityViewModel extends NetWorkViewModel<VenueDetails
     Retrofit retrofit;
 
     public ObservableField<String> venueName = new ObservableField<>();
+    public ObservableField<String> venueUrl = new ObservableField<>();
+    public ObservableField<String> venuePhone = new ObservableField<>();
+    public ObservableField<String> likesNumber = new ObservableField<>();
+    public ObservableField<String> priceRange = new ObservableField<>();
+    public ObservableField<String> rating = new ObservableField<>();
     public ObservableInt progressVisibility = new ObservableInt();
+
     private AppCompatActivity activity;
+    private ImageView venueImageView;
 
-
-    public VenueDetailsActivityViewModel(AppCompatActivity activity) {
+    public VenueDetailsActivityViewModel(AppCompatActivity activity, ActivityVenueDetailsBinding binding) {
         super(activity, new VenueDetailsModelWrapper());
         ((App) activity.getApplication()).getNetComponent().inject(this);
         this.activity = activity;
+        this.venueImageView = binding.venueImageView;
         loadVenueDetails();
     }
 
@@ -41,7 +53,7 @@ public class VenueDetailsActivityViewModel extends NetWorkViewModel<VenueDetails
 
         Observable<VenueDetailsModelWrapper> posts = retrofit.create(RestApi.class).
                 getVenueDetails(activity.getIntent().getStringExtra(VenueDetailsActivity.VENUE_ID),
-                ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
+                        ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
             @Override
@@ -60,6 +72,25 @@ public class VenueDetailsActivityViewModel extends NetWorkViewModel<VenueDetails
 
     @Override
     protected void setModel(VenueDetailsModelWrapper model) {
-        venueName.set(model.getResponse().getVenue().getName() + " " + model.getResponse().getVenue().getId());
+        VenueModel venueModel = model.getResponse().getVenue();
+        venueName.set(venueModel.getName());
+        venueUrl.set(venueModel.getUrl());
+        venuePhone.set(venueModel.getContact().getPhone());
+        if(venueModel.getLikes() !=null){
+            String likes = activity.getString(R.string.likes) + " " + venueModel.getLikes().getCount();
+            likesNumber.set(likes);
+        }
+        if(venueModel.getPrice() != null){
+            String price = activity.getString(R.string.price) + " " + venueModel.getPrice().getMessage() + " " + venueModel.getPrice().getCurrency();
+            priceRange.set(price);
+        }
+
+        String rate = activity.getString(R.string.rating) + " " + venueModel.getRating();
+        rating.set(rate);
+
+        Picasso.with(activity).load(venueModel.getBestPhoto().getPrefix()+"original"+venueModel.getBestPhoto().getSuffix())
+                .placeholder(R.drawable.colors)
+                .error(R.drawable.colors)
+                .into(venueImageView);
     }
 }

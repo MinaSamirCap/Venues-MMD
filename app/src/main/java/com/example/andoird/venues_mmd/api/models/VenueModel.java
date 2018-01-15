@@ -52,7 +52,7 @@ public class VenueModel implements Parcelable {
     private boolean ok;
     @SerializedName("rating")
     @Expose
-    private int rating;
+    private float rating;
     @SerializedName("ratingColor")
     @Expose
     private String ratingColor;
@@ -82,6 +82,12 @@ public class VenueModel implements Parcelable {
     @SerializedName("price")
     @Expose
     private PriceModel price;
+    @SerializedName("photos")
+    @Expose
+    private PhotosModel photos;
+    @SerializedName("bestPhoto")
+    @Expose
+    private PhotoSingleModel bestPhoto;
 
 
     public VenueModel() {
@@ -113,6 +119,8 @@ public class VenueModel implements Parcelable {
         this.referralId = in.readString();
         this.hasPerk = in.readByte() != 0;
         this.price = in.readParcelable(PriceModel.class.getClassLoader());
+        this.photos = in.readParcelable(PhotosModel.class.getClassLoader());
+        this.bestPhoto = in.readParcelable(PhotoSingleModel.class.getClassLoader());
     }
 
     public static final Creator<VenueModel> CREATOR = new Creator<VenueModel>() {
@@ -247,11 +255,11 @@ public class VenueModel implements Parcelable {
         this.ok = ok;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -287,6 +295,30 @@ public class VenueModel implements Parcelable {
         this.hours = hours;
     }
 
+    public PriceModel getPrice() {
+        return price;
+    }
+
+    public void setPrice(PriceModel price) {
+        this.price = price;
+    }
+
+    public PhotosModel getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(PhotosModel photos) {
+        this.photos = photos;
+    }
+
+    public PhotoSingleModel getBestPhoto() {
+        return bestPhoto;
+    }
+
+    public void setBestPhoto(PhotoSingleModel bestPhoto) {
+        this.bestPhoto = bestPhoto;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -305,7 +337,7 @@ public class VenueModel implements Parcelable {
         dest.writeParcelable(likes, flags);
         dest.writeByte((byte) (dislike ? 1 : 0));
         dest.writeByte((byte) (ok ? 1 : 0));
-        dest.writeInt(rating);
+        dest.writeFloat(rating);
         dest.writeString(ratingColor);
         dest.writeInt(ratingSignals);
         dest.writeByte((byte) (venueRatingBlacklisted ? 1 : 0));
@@ -315,5 +347,7 @@ public class VenueModel implements Parcelable {
         dest.writeString(referralId);
         dest.writeByte((byte) (hasPerk ? 1 : 0));
         dest.writeParcelable(price, flags);
+        dest.writeParcelable(photos, flags);
+        dest.writeParcelable(bestPhoto, flags);
     }
 }

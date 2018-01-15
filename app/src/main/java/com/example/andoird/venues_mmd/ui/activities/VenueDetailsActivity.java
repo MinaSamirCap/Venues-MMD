@@ -28,16 +28,15 @@ public class VenueDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         //initActivityTransitions();
         ActivityVenueDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_venue_details);
-        venueDetailsActivityViewModel = new VenueDetailsActivityViewModel(this);
+        venueDetailsActivityViewModel = new VenueDetailsActivityViewModel(this, binding);
         binding.setDetailsActivity(venueDetailsActivityViewModel);
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String itemTitle = "MinaSamir";//getIntent().getStringExtra(EXTRA_TITLE);
-        binding.collapsingToolbar.setTitle(itemTitle);
+        //String itemTitle = "MinaSamir";//getIntent().getStringExtra(EXTRA_TITLE);
+        //binding.collapsingToolbar.setTitle(itemTitle);
         binding.collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-        binding.title.setText(itemTitle);
 
         //statusBarColor(binding.image, binding.collapsingToolbar);
 

@@ -68,6 +68,8 @@ dependencies {
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     //for add dividers in recycler view
     implementation 'jp.wasabeef:recyclerview-animators:2.2.7' //for animating recycler view
+    //for loading image ..
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
