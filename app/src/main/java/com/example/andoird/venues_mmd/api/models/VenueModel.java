@@ -68,7 +68,7 @@ public class VenueModel implements Parcelable {
     @SerializedName("beenHere")
     @Expose
     private BeenHereModel beenHere;
-    @SerializedName("")
+    @SerializedName("hours")
     @Expose
     private HoursModel hours;
     /////////// special object ..
@@ -76,10 +76,12 @@ public class VenueModel implements Parcelable {
     @SerializedName("referralId")
     @Expose
     private String referralId;
-
     @SerializedName("hasPerk")
     @Expose
     private boolean hasPerk;
+    @SerializedName("price")
+    @Expose
+    private PriceModel price;
 
 
     public VenueModel() {
@@ -110,6 +112,7 @@ public class VenueModel implements Parcelable {
         this.hours = in.readParcelable(HoursModel.class.getClassLoader());
         this.referralId = in.readString();
         this.hasPerk = in.readByte() != 0;
+        this.price = in.readParcelable(PriceModel.class.getClassLoader());
     }
 
     public static final Creator<VenueModel> CREATOR = new Creator<VenueModel>() {
@@ -311,5 +314,6 @@ public class VenueModel implements Parcelable {
         dest.writeParcelable(hours, flags);
         dest.writeString(referralId);
         dest.writeByte((byte) (hasPerk ? 1 : 0));
+        dest.writeParcelable(price, flags);
     }
 }
