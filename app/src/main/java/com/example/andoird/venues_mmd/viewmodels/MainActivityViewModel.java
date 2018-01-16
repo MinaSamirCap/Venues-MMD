@@ -1,7 +1,6 @@
 package com.example.andoird.venues_mmd.viewmodels;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -20,11 +19,11 @@ import com.example.andoird.venues_mmd.api.calls.RestApi;
 import com.example.andoird.venues_mmd.api.models.SearchVenueModelWrapper;
 import com.example.andoird.venues_mmd.api.models.VenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
-import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
 import com.example.andoird.venues_mmd.ui.adapters.VenueItemAdapter;
 import com.example.andoird.venues_mmd.utils.GPSTracker;
 import com.example.andoird.venues_mmd.utils.UiUtils;
 import com.lapism.searchview.SearchAdapter;
+import com.lapism.searchview.SearchFilter;
 import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
 import com.lapism.searchview.SearchView;
@@ -77,6 +76,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
         setupSearchView();
         setupRecyclerView(recyclerView);
         progressVisibility.set(View.GONE);
+        getLocationPermission();
         //loadData();
     }
 
@@ -98,7 +98,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
     }
 
     private void loadData(String queryPlace) {
-        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithName(queryPlace,
+        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithArea(queryPlace,
                 ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
@@ -114,9 +114,9 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
         });
     }
 
-    private void loadData(double latitude, double longitude) {
+    private void loadData(double latitude, double longitude, String query) {
         Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithLocation(latitude + "," + longitude,
-                ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
+                query, ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
             @Override
@@ -157,7 +157,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
                     searchHistoryTable.addItem(new SearchItem(finalQuery));
                 }
                 searchView.close(false);
-                loadData(finalQuery);
+                loadData(latitude, longitude, finalQuery);
                 return true;
             }
 
@@ -172,7 +172,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
             @Override
             public void onSearchItemClick(View view, int position, String text) {
                 searchView.close(false);
-                loadData(text);
+                loadData(latitude, longitude, text);
                 //dispose();
             }
         });
@@ -214,10 +214,11 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
         suggestionsList.add(new SearchItem("search3"));
         searchAdapter.notifyDataSetChanged();*/
 
-        /*List<SearchFilter> filter = new ArrayList<>();
-        filter.add(new SearchFilter("Filter1", true));
-        filter.add(new SearchFilter("Filter2", true));
-        searchView.setFilters(filter);*/
+        List<SearchFilter> filter = new ArrayList<>();
+        filter.add(new SearchFilter(activity.getString(R.string.global), true));
+        searchView.setFilters(filter);
+
+        List<Boolean> filtersStates = searchView.getFiltersStates();
 
         //use mSearchView.getFiltersStates() to consider filter when performing search
     }
@@ -240,7 +241,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
                 && activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     GPSTracker.PERMISSIONS_REQUEST_ACCESS_LOCATION);
-            toast = UiUtils.displayToast(activity, toast, "permission denied");
+            toast = UiUtils.displayToast(activity, toast, activity.getString(R.string.permission_denied));
             toast.show();
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         } else {
@@ -249,9 +250,8 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
             if (gps.canGetLocation()) {
                 latitude = gps.getLatitude();
                 longitude = gps.getLongitude();
-                loadData(latitude, longitude);
             } else {
-                toast = UiUtils.displayToast(activity, toast, "please turn on GPS");
+                toast = UiUtils.displayToast(activity, toast,activity.getString(R.string.turn_on_gps));
                 toast.show();
             }
 
@@ -264,7 +264,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
             if (gps.canGetLocation()) {
                 latitude = gps.getLatitude();
                 longitude = gps.getLongitude();
-                loadData(latitude, longitude);
+                //loadData(latitude, longitude);
             } else {
                 toast = UiUtils.displayToast(activity, toast, "please turn on GPS");
                 toast.show();

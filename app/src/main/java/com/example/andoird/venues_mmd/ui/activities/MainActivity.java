@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiUtils.O_AUTH_URL));
+                Log.d("fsfs", ApiUtils.O_AUTH_URL);
                 startActivity(intent);
             }
         });
@@ -47,7 +49,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Uri uri = getIntent().getData();
+        Uri uri = intent.getData();
+        Log.d("fsfs",uri.toString());
+        if (uri != null && uri.toString().contains(ApiUtils.CALLBACK_URL)){
+
+        }
     }
 
     @Override

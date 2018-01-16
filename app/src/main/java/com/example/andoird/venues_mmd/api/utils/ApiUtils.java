@@ -15,11 +15,12 @@ public class ApiUtils {
     public static final String DATE_VERSION = "20171205";
 
     public static final String BASE_URL = "https://api.foursquare.com";
+    public static final String FORESQUARE_URL = "https://foursquare.com";
     public static final String FOURSQUARE_API_VERSION = "/v2";
 
     public static final String CALLBACK_URL = "mmdforesquare://callback";
-    public static final String O_AUTH_URL = BASE_URL +"/oauth2/authenticate?" +
-            CLIENT_ID_KEY + CLIENT_ID + "&response_type=code&redirect_uri=" + CALLBACK_URL;
+    public static final String O_AUTH_URL = FORESQUARE_URL +"/oauth2/authenticate?" +
+            CLIENT_ID_KEY +"="+ CLIENT_ID + "&response_type=code&redirect_uri=" + CALLBACK_URL;
 
     public static final String VENUE_ID = "venue_id";
     public static final String SEARCH_VENUE_URL = FOURSQUARE_API_VERSION + "/venues/search?";

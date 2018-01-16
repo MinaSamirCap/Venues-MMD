@@ -21,15 +21,16 @@ import static com.example.andoird.venues_mmd.api.utils.ApiUtils.DATE_VERSION_KEY
 public interface RestApi {
 
     @GET(ApiUtils.SEARCH_VENUE_URL)
-    Observable<SearchVenueModelWrapper> getPlacesWithName(@Query("near") String near,
+    Observable<SearchVenueModelWrapper> getPlacesWithArea(@Query("near") String near,
                                                           @Query(CLIENT_ID_KEY) String clientId,
                                                           @Query(CLIENT_SECRET_KEY) String clientSecret,
                                                           @Query(DATE_VERSION_KEY) String date);
 
     @GET(ApiUtils.SEARCH_VENUE_URL)
     Observable<SearchVenueModelWrapper> getPlacesWithLocation(@Query("ll") String latLng,
+                                                              @Query("query") String query,
                                                               @Query(CLIENT_ID_KEY) String clientId,
-                                                              @Query(CLIENT_SECRET) String clientSecret,
+                                                              @Query(CLIENT_SECRET_KEY) String clientSecret,
                                                               @Query("v") String date);
 
     @GET(ApiUtils.DETAILS_VENUE_URL)
