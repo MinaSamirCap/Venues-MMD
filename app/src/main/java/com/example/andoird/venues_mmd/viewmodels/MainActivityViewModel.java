@@ -115,7 +115,24 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
     }
 
     private void loadData(double latitude, double longitude, String query) {
-        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithLocation(latitude + "," + longitude,
+        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithLocationQuery(latitude + "," + longitude,
+                query, ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
+
+        makeNetworkRequest(posts, new ProgressController() {
+            @Override
+            public void setProgress() {
+                progressVisibility.set(View.VISIBLE);
+            }
+
+            @Override
+            public void removeProgress() {
+                progressVisibility.set(View.GONE);
+            }
+        });
+    }
+
+    private void loadData(String intent, String query) {
+        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getGlobalPlaces(intent,
                 query, ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
 
         makeNetworkRequest(posts, new ProgressController() {
@@ -157,7 +174,11 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
                     searchHistoryTable.addItem(new SearchItem(finalQuery));
                 }
                 searchView.close(false);
-                loadData(latitude, longitude, finalQuery);
+                if (globalSearch()) {
+                    loadData(ApiUtils.INTENT_GLOBAL_KEY, finalQuery);
+                } else {
+                    loadData(latitude, longitude, finalQuery);
+                }
                 return true;
             }
 
@@ -172,7 +193,12 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
             @Override
             public void onSearchItemClick(View view, int position, String text) {
                 searchView.close(false);
-                loadData(latitude, longitude, text);
+                if (globalSearch()) {
+
+                } else {
+                    //loadData(latitude, longitude, text);
+                    loadData(ApiUtils.INTENT_GLOBAL_KEY, text);
+                }
                 //dispose();
             }
         });
@@ -215,12 +241,15 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
         searchAdapter.notifyDataSetChanged();*/
 
         List<SearchFilter> filter = new ArrayList<>();
-        filter.add(new SearchFilter(activity.getString(R.string.global), true));
+        filter.add(new SearchFilter(activity.getString(R.string.global), false));
         searchView.setFilters(filter);
 
-        List<Boolean> filtersStates = searchView.getFiltersStates();
 
         //use mSearchView.getFiltersStates() to consider filter when performing search
+    }
+
+    private boolean globalSearch() {
+        return searchView.getFiltersStates().get(0);
     }
 
     private boolean itemExist(String finalQuery) {
@@ -251,7 +280,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
                 latitude = gps.getLatitude();
                 longitude = gps.getLongitude();
             } else {
-                toast = UiUtils.displayToast(activity, toast,activity.getString(R.string.turn_on_gps));
+                toast = UiUtils.displayToast(activity, toast, activity.getString(R.string.turn_on_gps));
                 toast.show();
             }
 
