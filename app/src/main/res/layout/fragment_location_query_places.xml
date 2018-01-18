@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="mainActivity"
-            type="com.example.andoird.venues_mmd.viewmodels.activities.MainActivityViewModel" />
+            name="placeLocationQueryFragment"
+            type="com.example.andoird.venues_mmd.viewmodels.fragments.LocationQueryPlacesFragmentViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,8 +18,8 @@
         tools:context="com.example.andoird.venues_mmd.ui.activities.MainActivity"
         tools:showIn="@layout/activity_main">
 
-        <FrameLayout
-            android:id="@+id/containerFrameLayout"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/searchRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -27,16 +27,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <Button
-            android:id="@+id/oAuthButton"
-            android:layout_width="0dp"
+        <ProgressBar
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Oauth"
-            android:visibility="visible"
+            android:visibility="@{placeLocationQueryFragment.progressVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

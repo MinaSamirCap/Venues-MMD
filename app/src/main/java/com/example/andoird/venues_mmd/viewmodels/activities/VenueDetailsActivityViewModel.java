@@ -1,4 +1,4 @@
-package com.example.andoird.venues_mmd.viewmodels;
+package com.example.andoird.venues_mmd.viewmodels.activities;
 
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
@@ -9,11 +9,12 @@ import android.widget.ImageView;
 import com.example.andoird.venues_mmd.App;
 import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.api.calls.RestApi;
-import com.example.andoird.venues_mmd.api.models.VenueDetailsModelWrapper;
+import com.example.andoird.venues_mmd.api.models.wrapper.VenueDetailsModelWrapper;
 import com.example.andoird.venues_mmd.api.models.VenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.databinding.ActivityVenueDetailsBinding;
 import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
+import com.example.andoird.venues_mmd.viewmodels.NetWorkViewModel;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;

@@ -7,7 +7,7 @@
 
         <variable
             name="mainActivity"
-            type="com.example.andoird.venues_mmd.viewmodels.MainActivityViewModel" />
+            type="com.example.andoird.venues_mmd.viewmodels.activities.MainActivityViewModel" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout

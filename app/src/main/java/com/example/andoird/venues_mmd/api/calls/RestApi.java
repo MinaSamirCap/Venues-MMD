@@ -1,7 +1,8 @@
 package com.example.andoird.venues_mmd.api.calls;
 
-import com.example.andoird.venues_mmd.api.models.SearchVenueModelWrapper;
-import com.example.andoird.venues_mmd.api.models.VenueDetailsModelWrapper;
+import com.example.andoird.venues_mmd.api.models.wrapper.SearchVenueLocationModelWrapper;
+import com.example.andoird.venues_mmd.api.models.wrapper.SearchVenueModelWrapper;
+import com.example.andoird.venues_mmd.api.models.wrapper.VenueDetailsModelWrapper;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 
 import io.reactivex.Observable;
@@ -45,11 +46,11 @@ public interface RestApi {
                                                         @Query(DATE_VERSION_KEY) String date);
 
     @GET(ApiUtils.EXPLORE_VENUE_URL)
-    Observable<SearchVenueModelWrapper> getNearestPlaces(@Query(LL_KEY) String latLng,
-                                                         @Query(CLIENT_ID_KEY) String clientId,
-                                                         @Query(CLIENT_SECRET_KEY) String clientSecret,
-                                                         @Query(DATE_VERSION_KEY) String date,
-                                                         @Query(LIMIT_KEY) String limit);
+    Observable<SearchVenueLocationModelWrapper> getNearestPlaces(@Query(LL_KEY) String latLng,
+                                                                 @Query(CLIENT_ID_KEY) String clientId,
+                                                                 @Query(CLIENT_SECRET_KEY) String clientSecret,
+                                                                 @Query(DATE_VERSION_KEY) String date,
+                                                                 @Query(LIMIT_KEY) String limit);
 
     @GET(ApiUtils.DETAILS_VENUE_URL)
     Observable<VenueDetailsModelWrapper> getVenueDetails(@Path(value = ApiUtils.VENUE_ID_KEY, encoded = true) String venueId,

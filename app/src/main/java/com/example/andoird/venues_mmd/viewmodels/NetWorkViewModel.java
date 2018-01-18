@@ -30,7 +30,7 @@ public abstract class NetWorkViewModel<T> extends BaseViewModel<T> {
 
     private CompositeDisposable mCompositeDisposable;
 
-    protected NetWorkViewModel(AppCompatActivity context, T model) {
+    protected NetWorkViewModel(Context context, T model) {
         super(context, model);
         //((App) context.getApplication()).getNetComponent().inject(this);
         mCompositeDisposable = new CompositeDisposable();

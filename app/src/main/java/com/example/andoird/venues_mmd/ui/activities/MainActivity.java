@@ -13,21 +13,20 @@ import android.view.View;
 import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.databinding.ActivityMainBinding;
-import com.example.andoird.venues_mmd.viewmodels.MainActivityViewModel;
+import com.example.andoird.venues_mmd.viewmodels.activities.MainActivityViewModel;
 
 
 public class MainActivity extends BaseActivity {
 
-    MainActivityViewModel mainActivityViewModel;
+    MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mainActivityViewModel = new MainActivityViewModel(this, binding.searchView,
-                binding.toolbar, binding.contentMain.searchRecyclerView);
-        binding.setMainActivity(mainActivityViewModel);
+        viewModel = new MainActivityViewModel(this, binding.searchView, binding.toolbar);
+        binding.setMainActivity(viewModel);
 
         binding.contentMain.oAuthButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,8 +49,8 @@ public class MainActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Uri uri = intent.getData();
-        Log.d("fsfs",uri.toString());
-        if (uri != null && uri.toString().contains(ApiUtils.CALLBACK_URL)){
+        Log.d("fsfs", uri.toString());
+        if (uri != null && uri.toString().contains(ApiUtils.CALLBACK_URL)) {
 
         }
     }
@@ -67,10 +66,10 @@ public class MainActivity extends BaseActivity {
 
         switch (item.getItemId()) {
             case R.id.search_item:
-                mainActivityViewModel.searchView.open(true);
+                viewModel.searchView.open(true);
                 return true;
             case R.id.gps_item:
-                mainActivityViewModel.getLocationPermission();
+                viewModel.openLocationFragment();
                 return true;
             default:
                 return false;
@@ -82,12 +81,12 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mainActivityViewModel.permissionResult(requestCode, permissions, grantResults);
+        viewModel.permissionResult(requestCode, permissions, grantResults);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mainActivityViewModel.dispose();
+        viewModel.dispose();
     }
 }

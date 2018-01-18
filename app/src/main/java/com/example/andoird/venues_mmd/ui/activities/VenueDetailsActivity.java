@@ -3,19 +3,11 @@ package com.example.andoird.venues_mmd.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.graphics.Palette;
-import android.transition.Slide;
-import android.widget.ImageView;
 
 import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.databinding.ActivityVenueDetailsBinding;
-import com.example.andoird.venues_mmd.viewmodels.VenueDetailsActivityViewModel;
+import com.example.andoird.venues_mmd.viewmodels.activities.VenueDetailsActivityViewModel;
 
 public class VenueDetailsActivity extends BaseActivity {
 

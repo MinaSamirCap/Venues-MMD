@@ -1,10 +1,11 @@
-package com.example.andoird.venues_mmd.viewmodels;
+package com.example.andoird.venues_mmd.viewmodels.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,12 +17,15 @@ import android.widget.Toast;
 import com.example.andoird.venues_mmd.App;
 import com.example.andoird.venues_mmd.R;
 import com.example.andoird.venues_mmd.api.calls.RestApi;
-import com.example.andoird.venues_mmd.api.models.SearchVenueModelWrapper;
+import com.example.andoird.venues_mmd.api.models.wrapper.SearchVenueModelWrapper;
 import com.example.andoird.venues_mmd.api.models.VenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.ui.adapters.VenueItemAdapter;
+import com.example.andoird.venues_mmd.ui.fragments.LocationQueryPlacesFragment;
+import com.example.andoird.venues_mmd.ui.fragments.NearestPlacesFragment;
 import com.example.andoird.venues_mmd.utils.GPSTracker;
 import com.example.andoird.venues_mmd.utils.UiUtils;
+import com.example.andoird.venues_mmd.viewmodels.NetWorkViewModel;
 import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchFilter;
 import com.lapism.searchview.SearchHistoryTable;
@@ -50,7 +54,6 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
     private Toast toast;
 
     public ObservableField<String> text = new ObservableField<>();
-    public ObservableInt progressVisibility = new ObservableInt();
 
     public SearchView searchView;
     public Toolbar toolbar;
@@ -58,11 +61,8 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
     private SearchHistoryTable searchHistoryTable;
 
     private double latitude, longitude;
-    private VenueItemAdapter venueItemAdapter;
-    private List<VenueModel> data = new ArrayList<>();
-
     public MainActivityViewModel(AppCompatActivity activity, SearchView searchView,
-                                 Toolbar toolbar, RecyclerView recyclerView) {
+                                 Toolbar toolbar) {
 
         super(activity, new SearchVenueModelWrapper());
         ((App) activity.getApplication()).getNetComponent().inject(this);
@@ -74,92 +74,9 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
 
         activity.setSupportActionBar(toolbar);
         setupSearchView();
-        setupRecyclerView(recyclerView);
-        progressVisibility.set(View.GONE);
         getLocationPermission();
-        //loadData();
     }
 
-    private void setupRecyclerView(RecyclerView recyclerView) {
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(
-                new HorizontalDividerItemDecoration.Builder(activity)
-                        .color(ContextCompat.getColor(activity, R.color.transparent))
-                        .sizeResId(R.dimen.divider)
-                        .build());
-        SlideInUpAnimator slideInUpAnimator = new SlideInUpAnimator();
-        slideInUpAnimator.setAddDuration(500);
-        recyclerView.setItemAnimator(slideInUpAnimator);
-
-        venueItemAdapter = new VenueItemAdapter(activity, data);
-        recyclerView.setAdapter(venueItemAdapter);
-    }
-
-    private void loadData(String queryPlace) {
-        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithArea(queryPlace,
-                ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
-
-        makeNetworkRequest(posts, new ProgressController() {
-            @Override
-            public void setProgress() {
-                progressVisibility.set(View.VISIBLE);
-            }
-
-            @Override
-            public void removeProgress() {
-                progressVisibility.set(View.GONE);
-            }
-        });
-    }
-
-    private void loadData(double latitude, double longitude, String query) {
-        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getPlacesWithLocationQuery(latitude + "," + longitude,
-                query, ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
-
-        makeNetworkRequest(posts, new ProgressController() {
-            @Override
-            public void setProgress() {
-                progressVisibility.set(View.VISIBLE);
-            }
-
-            @Override
-            public void removeProgress() {
-                progressVisibility.set(View.GONE);
-            }
-        });
-    }
-
-    private void loadData(String intent, String query) {
-        Observable<SearchVenueModelWrapper> posts = retrofit.create(RestApi.class).getGlobalPlaces(intent,
-                query, ApiUtils.CLIENT_ID, ApiUtils.CLIENT_SECRET, ApiUtils.DATE_VERSION);
-
-        makeNetworkRequest(posts, new ProgressController() {
-            @Override
-            public void setProgress() {
-                progressVisibility.set(View.VISIBLE);
-            }
-
-            @Override
-            public void removeProgress() {
-                progressVisibility.set(View.GONE);
-            }
-        });
-    }
-
-    @Override
-    protected void setModel(SearchVenueModelWrapper model) {
-        //int prevDataSize = data.size();
-
-        if (data.size() > 0) {
-            venueItemAdapter.notifyItemRangeRemoved(0, data.size());
-            data.clear();
-        }
-        data.addAll(model.getResponse().getVenuesList());
-        //venueItemAdapter.notifyDataSetChanged();
-        venueItemAdapter.notifyItemRangeInserted(0, data.size());
-    }
 
     private void setupSearchView() {
 
@@ -174,11 +91,9 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
                     searchHistoryTable.addItem(new SearchItem(finalQuery));
                 }
                 searchView.close(false);
-                if (globalSearch()) {
-                    loadData(ApiUtils.INTENT_GLOBAL_KEY, finalQuery);
-                } else {
-                    loadData(latitude, longitude, finalQuery);
-                }
+                replaceFragmentWithOutAddToBackStack(LocationQueryPlacesFragment.newInstance(
+                        latitude, longitude, finalQuery, globalSearch()
+                ));
                 return true;
             }
 
@@ -193,12 +108,9 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
             @Override
             public void onSearchItemClick(View view, int position, String text) {
                 searchView.close(false);
-                if (globalSearch()) {
-
-                } else {
-                    //loadData(latitude, longitude, text);
-                    loadData(ApiUtils.INTENT_GLOBAL_KEY, text);
-                }
+                replaceFragmentWithOutAddToBackStack(LocationQueryPlacesFragment.newInstance(
+                        latitude, longitude, text, globalSearch()
+                ));
                 //dispose();
             }
         });
@@ -300,4 +212,19 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
             }
         }
     }
+
+    public void openLocationFragment() {
+        replaceFragmentWithOutAddToBackStack(NearestPlacesFragment.newInstance(latitude, longitude));
+    }
+
+    public void replaceFragmentWithAddToBackStack(Fragment fr) {
+        activity.getSupportFragmentManager().beginTransaction().replace(R.id.containerFrameLayout, fr).addToBackStack(null).commit();
+
+    }
+
+    public void replaceFragmentWithOutAddToBackStack(Fragment fr) {
+        activity.getSupportFragmentManager().beginTransaction().replace(R.id.containerFrameLayout, fr).commit();
+
+    }
+
 }

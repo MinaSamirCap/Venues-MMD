@@ -14,6 +14,7 @@ public class ApiUtils {
     public static final String NEAR_KEY = "near";
     public static final String LL_KEY = "ll";
     public static final String LIMIT_KEY = "limit";
+    public static final String LIMIT_100 = "100";
     public static final String INTENT_KEY = "intent";
     public static final String INTENT_GLOBAL_KEY = "global";
 

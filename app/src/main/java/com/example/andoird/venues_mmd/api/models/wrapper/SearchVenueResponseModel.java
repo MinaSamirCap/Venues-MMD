@@ -1,8 +1,9 @@
-package com.example.andoird.venues_mmd.api.models;
+package com.example.andoird.venues_mmd.api.models.wrapper;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.andoird.venues_mmd.api.models.VenueModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
