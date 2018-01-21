@@ -61,6 +61,7 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
     private SearchHistoryTable searchHistoryTable;
 
     private double latitude, longitude;
+
     public MainActivityViewModel(AppCompatActivity activity, SearchView searchView,
                                  Toolbar toolbar) {
 
@@ -187,29 +188,25 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         } else {
             // Android version is lesser than 6.0 or the permission is already granted.
-            GPSTracker gps = new GPSTracker(activity);
-            if (gps.canGetLocation()) {
-                latitude = gps.getLatitude();
-                longitude = gps.getLongitude();
-            } else {
-                toast = UiUtils.displayToast(activity, toast, activity.getString(R.string.turn_on_gps));
-                toast.show();
-            }
+            getLatLng();
 
+        }
+    }
+
+    private void getLatLng() {
+        GPSTracker gps = new GPSTracker(activity);
+        if (gps.canGetLocation()) {
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
+        } else {
+            toast = UiUtils.displayToast(activity, toast, activity.getString(R.string.turn_on_gps));
+            toast.show();
         }
     }
 
     public void permissionResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == GPSTracker.PERMISSIONS_REQUEST_ACCESS_LOCATION) {
-            GPSTracker gps = new GPSTracker(activity);
-            if (gps.canGetLocation()) {
-                latitude = gps.getLatitude();
-                longitude = gps.getLongitude();
-                //loadData(latitude, longitude);
-            } else {
-                toast = UiUtils.displayToast(activity, toast, "please turn on GPS");
-                toast.show();
-            }
+            getLatLng();
         }
     }
 
