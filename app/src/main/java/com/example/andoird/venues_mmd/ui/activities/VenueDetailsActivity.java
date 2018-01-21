@@ -23,15 +23,6 @@ public class VenueDetailsActivity extends BaseActivity {
         venueDetailsActivityViewModel = new VenueDetailsActivityViewModel(this, binding);
         binding.setDetailsActivity(venueDetailsActivityViewModel);
 
-        setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //String itemTitle = "MinaSamir";//getIntent().getStringExtra(EXTRA_TITLE);
-        //binding.collapsingToolbar.setTitle(itemTitle);
-        binding.collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-
-        //statusBarColor(binding.image, binding.collapsingToolbar);
-
     }
 
     public static Intent openVenueDetailsActivity(Context context, String venueId) {

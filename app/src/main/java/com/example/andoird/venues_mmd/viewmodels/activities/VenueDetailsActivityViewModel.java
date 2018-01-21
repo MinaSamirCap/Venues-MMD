@@ -2,6 +2,7 @@ package com.example.andoird.venues_mmd.viewmodels.activities;
 
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.example.andoird.venues_mmd.api.models.VenueModel;
 import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.databinding.ActivityVenueDetailsBinding;
 import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
+import com.example.andoird.venues_mmd.utils.IntentUtils;
 import com.example.andoird.venues_mmd.viewmodels.NetWorkViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -39,6 +41,8 @@ public class VenueDetailsActivityViewModel extends NetWorkViewModel<VenueDetails
     public ObservableField<String> rating = new ObservableField<>();
     public ObservableInt progressVisibility = new ObservableInt();
 
+    private double lat, lng;
+
     private AppCompatActivity activity;
     private ImageView venueImageView;
 
@@ -47,6 +51,15 @@ public class VenueDetailsActivityViewModel extends NetWorkViewModel<VenueDetails
         ((App) activity.getApplication()).getNetComponent().inject(this);
         this.activity = activity;
         this.venueImageView = binding.venueImageView;
+
+        activity.setSupportActionBar(binding.toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //String itemTitle = getIntent().getStringExtra(EXTRA_TITLE);
+        //binding.collapsingToolbar.setTitle(itemTitle);
+        binding.collapsingToolbar.setExpandedTitleColor(ContextCompat.getColor(activity, android.R.color.transparent));
+
+        //statusBarColor(binding.image, binding.collapsingToolbar);
         loadVenueDetails();
     }
 
@@ -77,11 +90,11 @@ public class VenueDetailsActivityViewModel extends NetWorkViewModel<VenueDetails
         venueName.set(venueModel.getName());
         venueUrl.set(venueModel.getUrl());
         venuePhone.set(venueModel.getContact().getPhone());
-        if(venueModel.getLikes() !=null){
+        if (venueModel.getLikes() != null) {
             String likes = activity.getString(R.string.likes) + " " + venueModel.getLikes().getCount();
             likesNumber.set(likes);
         }
-        if(venueModel.getPrice() != null){
+        if (venueModel.getPrice() != null) {
             String price = activity.getString(R.string.price) + " " + venueModel.getPrice().getMessage() + " " + venueModel.getPrice().getCurrency();
             priceRange.set(price);
         }
@@ -89,9 +102,24 @@ public class VenueDetailsActivityViewModel extends NetWorkViewModel<VenueDetails
         String rate = activity.getString(R.string.rating) + " " + venueModel.getRating();
         rating.set(rate);
 
-        Picasso.with(activity).load(venueModel.getBestPhoto().getPrefix()+"original"+venueModel.getBestPhoto().getSuffix())
+        Picasso.with(activity).load(venueModel.getBestPhoto().getPrefix() + "original" + venueModel.getBestPhoto().getSuffix())
                 .placeholder(R.drawable.colors)
                 .error(R.drawable.colors)
                 .into(venueImageView);
+
+        lat = venueModel.getLocation().getLat();
+        lng = venueModel.getLocation().getLng();
+    }
+
+    public void openBrowser() {
+        IntentUtils.openBrowser(activity, venueUrl.get());
+    }
+
+    public void openDialScreen() {
+        IntentUtils.openDialScreen(activity, venuePhone.get());
+    }
+
+    public void openMap() {
+        IntentUtils.openMapWithLatLng(activity, lat, lng);
     }
 }

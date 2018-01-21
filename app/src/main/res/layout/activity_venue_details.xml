@@ -28,8 +28,8 @@
                 android:layout_height="300dp"
                 android:fitsSystemWindows="true"
                 app:collapsedTitleGravity="left"
-                app:expandedTitleGravity="left|bottom"
                 app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleGravity="left|bottom"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:title="@{detailsActivity.venueName}">
 
@@ -98,6 +98,7 @@
                         android:id="@+id/venueUrlTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:onClick="@{() -> detailsActivity.openBrowser()}"
                         android:text="@{detailsActivity.venueUrl}"
                         android:textColor="@color/blue_link"
                         android:textSize="18sp"
@@ -110,13 +111,14 @@
                         android:id="@+id/phoneTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:onClick="@{() -> detailsActivity.openDialScreen()}"
                         android:text="@{detailsActivity.venuePhone}"
                         android:textColor="@color/secondary_text"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/venueUrlTextView"
-                        tools:text="venue url" />
+                        tools:text="phone" />
 
                     <TextView
                         android:id="@+id/priceTextView"
@@ -153,6 +155,7 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             style="@style/FabStyle"
+            android:onClick="@{()-> detailsActivity.openMap()}"
             app:layout_anchor="@id/app_bar_layout"
             app:layout_anchorGravity="bottom|right|end" />
 
