@@ -11,14 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.andoird.venues_mmd.R;
-import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.databinding.ActivityMainBinding;
 import com.example.andoird.venues_mmd.viewmodels.activities.MainActivityViewModel;
 
 
 public class MainActivity extends BaseActivity {
 
-    MainActivityViewModel viewModel;
+
+    private MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,32 +27,12 @@ public class MainActivity extends BaseActivity {
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         viewModel = new MainActivityViewModel(this, binding.searchView, binding.toolbar);
         binding.setMainActivity(viewModel);
-
-        binding.contentMain.oAuthButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiUtils.O_AUTH_URL));
-                Log.d("fsfs", ApiUtils.O_AUTH_URL);
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Uri uri = getIntent().getData();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Uri uri = intent.getData();
-        Log.d("fsfs", uri.toString());
-        if (uri != null && uri.toString().contains(ApiUtils.CALLBACK_URL)) {
-
-        }
+        viewModel.onNewIntent(intent);
     }
 
     @Override

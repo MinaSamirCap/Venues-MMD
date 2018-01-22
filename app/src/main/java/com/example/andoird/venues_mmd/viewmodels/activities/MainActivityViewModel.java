@@ -1,9 +1,11 @@
 package com.example.andoird.venues_mmd.viewmodels.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,6 +27,7 @@ import com.example.andoird.venues_mmd.ui.adapters.VenueItemAdapter;
 import com.example.andoird.venues_mmd.ui.fragments.LocationQueryPlacesFragment;
 import com.example.andoird.venues_mmd.ui.fragments.NearestPlacesFragment;
 import com.example.andoird.venues_mmd.utils.GPSTracker;
+import com.example.andoird.venues_mmd.utils.IntentUtils;
 import com.example.andoird.venues_mmd.utils.UiUtils;
 import com.example.andoird.venues_mmd.viewmodels.NetWorkViewModel;
 import com.lapism.searchview.SearchAdapter;
@@ -47,6 +51,8 @@ import retrofit2.Retrofit;
  */
 
 public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrapper> {
+
+    private static final String TAG = "fsfs";
 
     @Inject
     Retrofit retrofit;
@@ -210,6 +216,10 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
         }
     }
 
+    public void getOauth(){
+        IntentUtils.openBrowser(activity, ApiUtils.O_AUTH_URL);
+    }
+
     public void openLocationFragment() {
         replaceFragmentWithOutAddToBackStack(NearestPlacesFragment.newInstance(latitude, longitude));
     }
@@ -223,5 +233,15 @@ public class MainActivityViewModel extends NetWorkViewModel<SearchVenueModelWrap
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.containerFrameLayout, fr).commit();
 
     }
+
+    public void onNewIntent(Intent intent){
+        Uri uri = intent.getData();
+        Log.d(TAG, uri.toString());
+        if (uri != null && uri.toString().contains(ApiUtils.CALLBACK_URL)) {
+
+        }
+    }
+
+
 
 }
