@@ -59,7 +59,8 @@ public class LocationQueryPlacesFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FragmentLocationQueryPlacesBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_location_query_places, container, false);
-        viewModel = new LocationQueryPlacesFragmentViewModel(this.getActivity(), binding.searchRecyclerView, latitude, longitude, query, isGlobal);
+        viewModel = new LocationQueryPlacesFragmentViewModel(this.getActivity(),
+                binding.searchRecyclerView, latitude, longitude, query, isGlobal);
         binding.setPlaceLocationQueryFragment(viewModel);
         return binding.getRoot();
     }

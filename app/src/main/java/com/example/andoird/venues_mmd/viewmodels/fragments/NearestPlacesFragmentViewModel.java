@@ -50,9 +50,7 @@ public class NearestPlacesFragmentViewModel extends NetWorkViewModel<SearchVenue
 
     @Inject
     Retrofit retrofit;
-
-    private Toast toast;
-
+    
     public ObservableField<String> text = new ObservableField<>();
     public ObservableInt progressVisibility = new ObservableInt();
 

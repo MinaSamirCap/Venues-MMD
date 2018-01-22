@@ -54,7 +54,8 @@ public class NearestPlacesFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FragmentNearestPlacesBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_nearest_places, container, false);
-        viewModel = new NearestPlacesFragmentViewModel(this.getActivity(), binding.searchRecyclerView, latitude, longitude);
+        viewModel = new NearestPlacesFragmentViewModel(this.getActivity(),
+                binding.searchRecyclerView, latitude, longitude);
         binding.setNearestPlacesFragment(viewModel);
         return binding.getRoot();
 

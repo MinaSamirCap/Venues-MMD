@@ -39,16 +39,11 @@ public class LocationQueryPlacesFragmentViewModel extends NetWorkViewModel<Searc
     @Inject
     Retrofit retrofit;
 
-    private Toast toast;
-
     public ObservableField<String> text = new ObservableField<>();
     public ObservableInt progressVisibility = new ObservableInt();
 
     private FragmentActivity activity;
 
-    private double latitude, longitude;
-    private String query;
-    private boolean isGlobal;
     private VenueItemAdapter venueItemAdapter;
     private List<VenueModel> data = new ArrayList<>();
 
@@ -59,10 +54,6 @@ public class LocationQueryPlacesFragmentViewModel extends NetWorkViewModel<Searc
         this.activity = activity;
         setupRecyclerView(recyclerView);
         progressVisibility.set(View.GONE);
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.query = query;
-        this.isGlobal = isGlobal;
         if (isGlobal) {
             loadData(ApiUtils.INTENT_GLOBAL_KEY, query);
         }else {
