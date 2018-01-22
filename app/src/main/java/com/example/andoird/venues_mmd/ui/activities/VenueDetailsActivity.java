@@ -11,7 +11,7 @@ import com.example.andoird.venues_mmd.viewmodels.activities.VenueDetailsActivity
 
 public class VenueDetailsActivity extends BaseActivity {
 
-    VenueDetailsActivityViewModel venueDetailsActivityViewModel;
+    private VenueDetailsActivityViewModel venueDetailsActivityViewModel;
 
     public static final String VENUE_ID = "venueId";
 

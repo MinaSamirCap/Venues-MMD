@@ -16,6 +16,7 @@ import com.example.andoird.venues_mmd.api.utils.ApiUtils;
 import com.example.andoird.venues_mmd.databinding.ActivityVenueDetailsBinding;
 import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
 import com.example.andoird.venues_mmd.utils.IntentUtils;
+import com.example.andoird.venues_mmd.utils.UiUtils;
 import com.example.andoird.venues_mmd.viewmodels.NetWorkViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -102,10 +103,8 @@ public class VenueDetailsActivityViewModel extends NetWorkViewModel<VenueDetails
         String rate = activity.getString(R.string.rating) + " " + venueModel.getRating();
         rating.set(rate);
 
-        Picasso.with(activity).load(venueModel.getBestPhoto().getPrefix() + "original" + venueModel.getBestPhoto().getSuffix())
-                .placeholder(R.drawable.colors)
-                .error(R.drawable.colors)
-                .into(venueImageView);
+        UiUtils.loadImage(venueImageView,
+                venueModel.getBestPhoto().getPrefix() + "original" + venueModel.getBestPhoto().getSuffix());
 
         lat = venueModel.getLocation().getLat();
         lng = venueModel.getLocation().getLng();
