@@ -43,20 +43,20 @@ public class VenueItemAdapter extends RecyclerView.Adapter<VenueItemViewHolder> 
     @Override
     public void onBindViewHolder(VenueItemViewHolder holder, int position) {
         holder.bind(data.get(position));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = VenueDetailsActivity.openVenueDetailsActivity(context,
-                        data.get(holder.getAdapterPosition()).getId());
-                context.startActivity(intent);
-            }
-        });
-
     }
 
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+
+
+    public class Presenter{
+        public void openVenueDetailsActivity(VenueModel venueModel){
+            Intent intent = VenueDetailsActivity.openVenueDetailsActivity(context, venueModel.getId());
+            context.startActivity(intent);
+        }
     }
 
 }
