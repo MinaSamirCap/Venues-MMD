@@ -23,11 +23,9 @@ import java.util.List;
  */
 
 public class VenueItemAdapter extends RecyclerView.Adapter<VenueItemViewHolder> {
-    private Context context;
     private List<VenueModel> data;
 
     public VenueItemAdapter(Context context, List<VenueModel> categoryObjectList) {
-        this.context = context;
         this.data = categoryObjectList;
     }
 
@@ -36,7 +34,6 @@ public class VenueItemAdapter extends RecyclerView.Adapter<VenueItemViewHolder> 
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         VenueItemSearchListBinding bind = DataBindingUtil.inflate(inflater, R.layout.venue_item_search_list, parent, false);
-
         return new VenueItemViewHolder(bind);
     }
 
@@ -50,13 +47,5 @@ public class VenueItemAdapter extends RecyclerView.Adapter<VenueItemViewHolder> 
         return data.size();
     }
 
-
-
-    public class Presenter{
-        public void openVenueDetailsActivity(VenueModel venueModel){
-            Intent intent = VenueDetailsActivity.openVenueDetailsActivity(context, venueModel.getId());
-            context.startActivity(intent);
-        }
-    }
 
 }

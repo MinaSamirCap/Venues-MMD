@@ -1,8 +1,12 @@
 package com.example.andoird.venues_mmd.api.models;
 
+import android.content.Intent;
+import android.databinding.BaseObservable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
 
+import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +14,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by mina on 07/12/17.
  */
 
-public class VenueModel implements Parcelable {
+public class VenueModel extends BaseObservable implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -349,5 +353,10 @@ public class VenueModel implements Parcelable {
         dest.writeParcelable(price, flags);
         dest.writeParcelable(photos, flags);
         dest.writeParcelable(bestPhoto, flags);
+    }
+
+    public void openVenueDetailsActivity(View view, String venueId) {
+        Intent intent = VenueDetailsActivity.openVenueDetailsActivity(view.getContext(), venueId);
+        view.getContext().startActivity(intent);
     }
 }
