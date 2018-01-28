@@ -26,11 +26,14 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          # name: Run Tests
-          # command: ./gradlew lint test
-          name: assemble apk
+          # to build apk file ..
+          name: generate apk
           command: ./gradlew assemble
+      - run:
+          name: Run Tests
+          command: ./gradlew lint test
       - store_artifacts:
+          # to upload apk file to circle ci server.
           path: app/build/outputs/apk/debug
           destination: debug
       - store_test_results:
