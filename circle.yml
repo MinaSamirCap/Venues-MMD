@@ -5,8 +5,8 @@
 
 general:
     artifacts:
-        - /home/Mina/VenuesMMD/app/build/outputs/apk/debug
-        - /home/Mina/VenuesMMD/app/release
+        - "app/build/outputs/apk/debug"
+        - "app/release"
 
 machine:
     environment:
