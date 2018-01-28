@@ -1,12 +1,8 @@
 package com.example.andoird.venues_mmd.viewmodels.binding;
 
-import android.content.Intent;
 import android.databinding.BindingAdapter;
-import android.view.View;
 import android.widget.TextView;
-
 import com.example.andoird.venues_mmd.R;
-import com.example.andoird.venues_mmd.ui.activities.VenueDetailsActivity;
 
 /**
  * Created by mina on 21/01/18.
