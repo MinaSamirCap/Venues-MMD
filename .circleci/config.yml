@@ -37,5 +37,5 @@ jobs:
           path: app/build/outputs/apk/debug
           destination: debug
       - store_test_results:
-          path: app/build/test-results
-          destination: test-results/
+          path: app/build/reports
+          destination: reports
